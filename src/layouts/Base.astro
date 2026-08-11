@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Notes on software, systems, and building things.',
+} = Astro.props;
+const siteName = 'Pratik’s notes';
+const pageTitle = title ? `${title} — ${siteName}` : siteName;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <link rel="icon" href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>`} />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href={`${base}rss.xml`} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="site-name" href={base}>{siteName}</a>
+      <nav aria-label="Main navigation">
+        <a href={base}>Writing</a>
+        <a href={`${base}about/`}>About</a>
+        <a href={`${base}rss.xml`}>RSS</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <span>Built with Astro. No tracking, no cookies.</span>
+    </footer>
+  </body>
+</html>
