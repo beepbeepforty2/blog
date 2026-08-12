@@ -4,6 +4,20 @@ A minimal static blog built with [Astro](https://astro.build/) and deployed to [
 
 This README is the reference for writing, previewing, and publishing posts.
 
+## Publish with Amp
+
+From an Amp thread opened in this repository, invoke the project skill and paste the complete article after the command:
+
+```text
+/publishing-blog-post
+
+# Your article title
+
+Your complete article content...
+```
+
+The command derives the post metadata, formats Markdown and math, resolves citation placeholders, validates the site, commits and pushes the post, waits for GitHub Pages, and verifies the live URL. Invoking it with article content authorizes that complete publication workflow, so it does not pause for deployment confirmation.
+
 ## Quick start
 
 From the repository directory:
@@ -217,6 +231,7 @@ src/pages/                Home, post, About, and RSS routes
 src/styles/global.css     Site styling
 astro.config.mjs          Site URL, GitHub Pages base path, and code theme
 .github/workflows/        Automatic GitHub Pages deployment
+.agents/skills/           Project-specific Amp slash commands
 ```
 
 The generated `dist/` directory and `node_modules/` are local build artifacts and should not be committed.
