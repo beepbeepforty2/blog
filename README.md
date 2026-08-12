@@ -123,6 +123,24 @@ $ npm run build
 ```
 ````
 
+### Math
+
+Use dollar signs for inline LaTeX:
+
+```md
+The privacy budget is $(\epsilon, \delta)$ and the clipping threshold is $C$.
+```
+
+Use double dollar signs on separate lines for a displayed equation:
+
+```md
+$$
+\Pr[M(D) \in S] \le e^\epsilon \Pr[M(D') \in S] + \delta
+$$
+```
+
+Math is rendered with KaTeX during the static build, so it does not require client-side JavaScript.
+
 ## Preview before publishing
 
 Run the development server while writing:

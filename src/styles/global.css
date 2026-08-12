@@ -72,6 +72,7 @@ h1 { font-size: clamp(1.8rem, 6vw, 2.5rem); }
 .prose blockquote { margin-left: 0; padding-left: 1rem; border-left: 3px solid var(--line); color: var(--muted); }
 .prose :not(pre) > code { padding: 0.1em 0.3em; border: 1px solid var(--line); border-radius: 3px; font-size: 0.9em; }
 .prose pre { margin: 1.75rem 0; padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.85rem; line-height: 1.55; }
+.prose .katex-display { overflow-x: auto; overflow-y: hidden; }
 
 footer { margin-top: 5rem; padding: 1.5rem 0 2.5rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.75rem; }
 
