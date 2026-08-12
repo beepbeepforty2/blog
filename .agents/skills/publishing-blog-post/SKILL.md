@@ -1,19 +1,19 @@
 ---
 name: publishing-blog-post
-description: "Formats, fact-checks, publishes, deploys, and verifies a pasted Astro blog post. Use when invoked with /publishing-blog-post followed by article content."
+description: "Formats, fact-checks, publishes, deploys, and verifies supplied Astro blog content. Use when the Blog: Publish article from clipboard command requests the automated publication workflow."
 argument-hint: "[article content]"
 ---
 
 # Publishing a Blog Post
 
-Turn the content supplied after `/publishing-blog-post` into a finished post on this Astro blog and publish it without asking for intermediate approval.
+Turn the supplied article content into a finished post on this Astro blog and publish it without asking for intermediate approval.
 
-Invoking this skill with article content explicitly authorizes committing the post-related changes, pushing them to this repository's `main` branch, triggering GitHub Pages, and verifying the live deployment. Do not ask whether to publish or deploy.
+The `Blog: Publish article from clipboard` command explicitly authorizes committing the post-related changes, pushing them to this repository's `main` branch, triggering GitHub Pages, and verifying the live deployment. Do not ask whether to publish or deploy.
 
 ## Required outcome
 
 1. Read `README.md`, `src/content.config.ts`, the relevant layout and styles, and one or two representative posts before editing.
-2. Treat all text supplied after the slash command as the source article. If no article content was supplied, ask for it and stop.
+2. Treat all text supplied after the `ARTICLE` marker as the source article. If no article content was supplied, ask for it and stop.
 3. Create one post in `src/content/posts/` with:
    - a concise lowercase, hyphen-separated filename derived from the title;
    - a title derived from the supplied content;

@@ -6,17 +6,15 @@ This README is the reference for writing, previewing, and publishing posts.
 
 ## Publish with Amp
 
-From an Amp thread opened in this repository, invoke the project skill and paste the complete article after the command:
+From an Amp thread opened in this repository:
 
-```text
-/publishing-blog-post
+1. Copy the complete article to the macOS clipboard.
+2. Type `/` or press `Ctrl+O` to open Amp's command palette.
+3. Run **Blog: Publish article from clipboard**.
 
-# Your article title
+The command sends the copied article to the project publishing skill. It derives the post metadata, formats Markdown and math, resolves citation placeholders, validates the site, commits and pushes the post, waits for GitHub Pages, and verifies the live URL. Running the command authorizes that complete publication workflow, so it does not pause for deployment confirmation.
 
-Your complete article content...
-```
-
-The command derives the post metadata, formats Markdown and math, resolves citation placeholders, validates the site, commits and pushes the post, waits for GitHub Pages, and verifies the live URL. Invoking it with article content authorizes that complete publication workflow, so it does not pause for deployment confirmation.
+Amp does not expose project skills as `/skill-name` commands. To invoke the underlying skill manually, open the palette, run **skill: invoke**, select `publishing-blog-post`, and send the article in the next message.
 
 ## Quick start
 
@@ -231,7 +229,8 @@ src/pages/                Home, post, About, and RSS routes
 src/styles/global.css     Site styling
 astro.config.mjs          Site URL, GitHub Pages base path, and code theme
 .github/workflows/        Automatic GitHub Pages deployment
-.agents/skills/           Project-specific Amp slash commands
+.agents/skills/           Project-specific Amp publishing workflow
+.amp/plugins/             Project-specific Amp command-palette actions
 ```
 
 The generated `dist/` directory and `node_modules/` are local build artifacts and should not be committed.
