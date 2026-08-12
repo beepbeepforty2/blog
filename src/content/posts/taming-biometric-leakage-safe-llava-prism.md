@@ -1,7 +1,7 @@
 ---
 title: 'Taming the Beast: Mitigating Biometric Leakage in MLLMs with Safe-LLaVA and PRISM'
 description: How Safe-LLaVA and PRISM diagnose and mitigate explicit and implicit biometric leakage in multimodal large language models.
-published: 2026-08-12
+published: '2026-08-12T16:25:54+05:30'
 tags: [privacy, multimodal-models, biometric-safety, safe-llava, prism]
 draft: false
 ---

@@ -1,7 +1,7 @@
 ---
 title: 'Differential Privacy in Machine Learning & Computer Vision: Source Catalog'
 description: A structured catalog of foundational and recent differential-privacy work spanning deep learning, computer vision, video, facial privacy, and multimodal models.
-published: 2026-08-12
+published: '2026-08-12T15:58:26+05:30'
 tags: [differential-privacy, machine-learning, computer-vision, multimodal-models]
 draft: false
 ---

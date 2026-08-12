@@ -1,7 +1,7 @@
 ---
 title: 'Privacy-Preserving Paradigms in Modern Computer Vision and Multimodal Perception: A Comprehensive Analysis of Differential and Federated Approaches'
 description: A comprehensive analysis of differential privacy, federated learning, and homomorphic encryption across modern computer vision and multimodal perception.
-published: 2026-08-12
+published: '2026-08-12T15:46:09+05:30'
 tags: [privacy, computer-vision, federated-learning, differential-privacy, homomorphic-encryption]
 draft: false
 ---
