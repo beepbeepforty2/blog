@@ -1,5 +1,5 @@
 ---
-title: "Your LLM Research Assistant Is Great at Exactly the Parts of Research That Don't Matter"
+title: "Your LLM Assistant Is Great at Everything Except Research"
 description: A map of where language models genuinely help in the research pipeline, where they only work inside verification machinery, and where no prompt can fix the problem.
 published: 2026-08-19
 tags: [llms, research, workflow]
