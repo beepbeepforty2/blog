@@ -2,7 +2,8 @@
 title: "Your LLM Assistant Is Great at Everything Except Research"
 description: A map of where language models genuinely help in the research pipeline, where they only work inside verification machinery, and where no prompt can fix the problem.
 published: 2026-08-19
-tags: [llms, research, workflow]
+updated: 2026-08-21
+tags: [llms, research, workflow, epistemics]
 draft: false
 ---
 
@@ -11,6 +12,13 @@ draft: false
 ---
 
 If you've tried using an LLM as a research assistant, you've probably lived this cycle: it declares a eureka with total confidence, you ask it to check, it searches, finds the 2023 paper that already did the thing, and concedes gracefully. Then it does it again. And again. Eventually you stop trusting anything it says, which is a strange relationship to have with a tool you're paying for.
+
+> **You:** I think I've found something — nobody has combined X with Y for this setting.
+> **Model:** This is a genuinely novel direction. The combination hasn't been explored in the literature.
+> **You:** Are you sure? Check.
+> **Model:** You're right to push on this — a 2023 paper already does exactly this. Here it is. My apologies for the overclaim.
+
+Repeat that exchange a dozen times with a dozen different "discoveries" and you stop trusting the first line of any reply, which defeats the point of having an assistant.
 
 The instinct is to fix this with better prompts, a "constitution," a carefully worded system message about epistemic humility. This mostly doesn't work, and the reason it doesn't work is more interesting than the failure itself: **the reliability of an LLM on a task is not a function of the prompt. It's a function of where the task sits on two axes.**
 
@@ -21,6 +29,21 @@ The instinct is to fix this with better prompts, a "constitution," a carefully w
 **Axis 2: Verification strength.** Can acceptability be checked mechanically? A compiler checks syntax perfectly. A test suite checks behavior partially. "Is this hypothesis actually novel?" — nothing checks that. You find out from Reviewer 2.
 
 LLMs succeed at two corners of this space. **Loose spec** (anything competent lands inside the huge acceptable region — this is why one-prompt websites feel miraculous) and **strong verification** (generate freely, filter mechanically — this is why theorem provers and well-tested code work).
+
+```text
+                 strong verification         weak verification
+              +-------------------------+-------------------------+
+ loose spec   |  generate & filter      |  "write me a draft"     |
+              |  (theorem provers,      |  (competent landing     |
+              |   tested code)          |   pages, boilerplate)   |
+              |  → LLMs excel           |  → LLMs excel           |
+              +-------------------------+-------------------------+
+ tight spec   |  scoped coding with     |  THE DEAD ZONE          |
+              |  a runnable verifier    |  (novelty, judgment,    |
+              |  → LLMs excel           |   direction, taste)     |
+              |                         |  → LLMs fail silently   |
+              +-------------------------+-------------------------+
+```
 
 The dead zone is **tight spec + weak verification**: a small target the machine cannot see. And here's the uncomfortable observation — *almost everything that makes research actually research lives in the dead zone.*
 
@@ -63,6 +86,18 @@ With that frame, the entire research pipeline sorts itself.
 LLMs are strong at the **divergent, anchored ends** of research — expanding candidate sets, retrieving and checking against external text — and structurally weak at the **convergent, unanchored middle**: choosing, judging, interpreting, directing.
 
 The middle is not incidental. The convergent middle *is* the research. It's the part that distinguishes a researcher from a pipeline, and it's the part being examined when anyone evaluates your work.
+
+| Task | Spec | Verification | Verdict |
+| --- | --- | --- | --- |
+| Literature retrieval | loose | strong | delegate freely |
+| Hypothesis enumeration | loose | strong (as a list) | delegate freely |
+| Experiment implementation | loose–tight | strong (runs/tests) | delegate freely |
+| Experiment design | tight | weak → pre-register | delegate inside machinery |
+| Experiment running | tight | weak unless failures are loud | delegate with loud-failure checks |
+| Gap finding | tight | weak → adversarial pass | signal only, never a verdict |
+| Interpreting ambiguous results | tight | none | do it yourself |
+| Research direction | tight | none | never delegate |
+| Judging novelty/significance | tight | none | never delegate |
 
 Which yields an allocation rule blunt enough to actually follow:
 
