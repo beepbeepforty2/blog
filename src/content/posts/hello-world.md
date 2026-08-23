@@ -1,15 +1,39 @@
 ---
 title: Hello, world
-description: A small first post, and a quick tour of writing here.
+description: A small first post introducing who I am, what I build, and a quick tour of writing here.
 published: 2026-08-11
-tags: [meta]
+updated: 2026-08-23
+tags: [meta, about]
 ---
 
-This is a deliberately simple, static blog. Posts are Markdown files, which means writing is mostly just writing.
+I’m Pratik — a Senior Machine Learning Engineer passionate about teaching robots new tricks and pushing the boundaries of AI.
 
-## Code looks like this
+This is a deliberately simple, static space where I write about software engineering, machine learning systems, privacy, robotics, and the things I learn along the way while building.
 
-Astro renders fenced code blocks with syntax highlighting at build time:
+## 🛠️ Top Skills & Focus Areas
+
+- **Python** — My primary language of choice for ML architectures and systems.
+- **PyTorch & TensorFlow** — Deep learning, neural networks, and everything in between.
+- **LLMs & Multimodal Models** — Building, fine-tuning, evaluating, and deploying large models.
+- **Docker & Reproducibility** — Containerizing pipelines for deterministic, reproducible experiments and production environments.
+
+## 🤖 What Drives Me
+
+Making robots learn is my thing! Whether it’s reinforcement learning, computer vision, or generative models, I love exploring how machines perceive, act, and continually improve.
+
+> *"The future is learned, not programmed."*
+
+Let’s build smarter robots and intelligent systems together.
+
+---
+
+## ⚡ A Quick Tour of Writing Here
+
+Posts are pure Markdown files. Astro compiles them into static HTML at build time with zero client-side JavaScript overhead.
+
+### Code syntax highlighting
+
+Fenced code blocks are styled dynamically using the built-in terminal theme engine:
 
 ```ts
 type Result<T> =
@@ -25,8 +49,4 @@ export function attempt<T>(fn: () => T): Result<T> {
 }
 ```
 
-There is no server, database, account, or client-side framework involved. GitHub Actions builds the HTML and GitHub Pages serves it.
-
-## Publishing a post
-
-Add a file to `src/content/posts`, fill in its frontmatter, commit, and push. The deployment workflow handles the rest.
+There is no server, database, or analytics tracking involved. GitHub Actions builds the site and GitHub Pages serves it.
