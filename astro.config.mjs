@@ -33,7 +33,7 @@ export default defineConfig({
       rehypePlugins: [rehypeKatex],
     }),
     shikiConfig: {
-      theme: 'github-dark',
+      theme: 'css-variables',
       wrap: true,
     },
   },

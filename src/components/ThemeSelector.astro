@@ -1,0 +1,174 @@
+---
+const themes = [
+  {
+    group: 'Earthy & Warm',
+    options: [
+      { id: 'gruvbox-dark', name: 'Gruvbox Dark' },
+      { id: 'gruvbox-light', name: 'Gruvbox Light' },
+      { id: 'everforest-dark', name: 'Everforest Dark' },
+      { id: 'everforest-light', name: 'Everforest Light' },
+    ],
+  },
+  {
+    group: 'Soothing & Pastel',
+    options: [
+      { id: 'catppuccin-mocha', name: 'Catppuccin Mocha' },
+      { id: 'catppuccin-latte', name: 'Catppuccin Latte' },
+      { id: 'rose-pine', name: 'Rosé Pine' },
+      { id: 'rose-pine-dawn', name: 'Rosé Pine Dawn' },
+    ],
+  },
+  {
+    group: 'Cool & Nordic',
+    options: [
+      { id: 'tokyo-night', name: 'Tokyo Night' },
+      { id: 'tokyo-night-day', name: 'Tokyo Night Day' },
+      { id: 'nord', name: 'Nord' },
+    ],
+  },
+  {
+    group: 'Japanese & Nature',
+    options: [
+      { id: 'kanagawa-wave', name: 'Kanagawa Wave' },
+      { id: 'kanagawa-lotus', name: 'Kanagawa Lotus' },
+    ],
+  },
+  {
+    group: 'High Contrast & Classics',
+    options: [
+      { id: 'dracula', name: 'Dracula' },
+      { id: 'one-dark', name: 'One Dark' },
+      { id: 'monokai-pro', name: 'Monokai Pro' },
+      { id: 'solarized-dark', name: 'Solarized Dark' },
+      { id: 'solarized-light', name: 'Solarized Light' },
+    ],
+  },
+  {
+    group: 'Minimalist & System',
+    options: [
+      { id: 'github-dark', name: 'GitHub Dark' },
+      { id: 'github-light', name: 'GitHub Light' },
+    ],
+  },
+];
+---
+
+<div class="theme-switcher">
+  <label for="theme-select" class="theme-label" title="Switch terminal theme">
+    <span class="theme-icon" aria-hidden="true">◐</span>
+    <span class="sr-only">Theme</span>
+  </label>
+  <select id="theme-select" class="theme-select" aria-label="Select theme">
+    {themes.map((cat) => (
+      <optgroup label={cat.group}>
+        {cat.options.map((t) => (
+          <option value={t.id}>{t.name}</option>
+        ))}
+      </optgroup>
+    ))}
+  </select>
+</div>
+
+<script is:inline>
+  (function () {
+    const select = document.getElementById('theme-select');
+    if (!select) return;
+
+    function syncSelect() {
+      const current = document.documentElement.getAttribute('data-theme') || 'gruvbox-dark';
+      select.value = current;
+    }
+
+    syncSelect();
+
+    select.addEventListener('change', (e) => {
+      const theme = e.target.value;
+      document.documentElement.setAttribute('data-theme', theme);
+      try {
+        localStorage.setItem('theme', theme);
+      } catch (_) {}
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme' && e.newValue) {
+        document.documentElement.setAttribute('data-theme', e.newValue);
+        syncSelect();
+      }
+    });
+  })();
+</script>
+
+<style>
+  .theme-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    position: relative;
+    font-size: 0.8rem;
+  }
+
+  .theme-label {
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .theme-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .theme-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: var(--bg-alt);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.22rem 1.6rem 0.22rem 0.55rem;
+    font-family: inherit;
+    font-size: 0.78rem;
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="%23888888" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.45rem center;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .theme-select:hover {
+    border-color: var(--accent);
+  }
+
+  .theme-select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  .theme-select optgroup {
+    background: var(--bg);
+    color: var(--muted);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .theme-select option {
+    background: var(--bg-alt);
+    color: var(--text);
+    padding: 0.3rem;
+  }
+</style>
