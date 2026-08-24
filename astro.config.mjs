@@ -13,10 +13,9 @@ for (const file of readdirSync('./src/content/posts')) {
 }
 
 export default defineConfig({
-  site: 'https://beepbeepforty2.github.io',
-  base: '/blog',
+  site: 'https://undiscoveredmaterials.com',
   redirects: {
-    '/posts': '/blog/',
+    '/posts': '/',
   },
   integrations: [
     sitemap({

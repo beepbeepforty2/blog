@@ -1,6 +1,6 @@
 # Pratik’s notes
 
-A minimal static blog built with [Astro](https://astro.build/) and deployed to [GitHub Pages](https://beepbeepforty2.github.io/blog/).
+A minimal static blog built with [Astro](https://astro.build/) and deployed to [Cloudflare Pages](https://undiscoveredmaterials.com/).
 
 This README is the reference for writing, previewing, and publishing posts.
 
@@ -12,7 +12,7 @@ From an Amp thread opened in this repository:
 2. Type `/` or press `Ctrl+O` to open Amp's command palette.
 3. Run **Blog: Publish article from clipboard**.
 
-The command sends the copied article to the project publishing skill. It derives the post metadata, formats Markdown and math, resolves citation placeholders, validates the site, commits and pushes the post, waits for GitHub Pages, and verifies the live URL. Running the command authorizes that complete publication workflow, so it does not pause for deployment confirmation.
+The command sends the copied article to the project publishing skill. It derives the post metadata, formats Markdown and math, resolves citation placeholders, validates the site, commits and pushes the post, waits for the Cloudflare Pages deploy, and verifies the live URL. Running the command authorizes that complete publication workflow, so it does not pause for deployment confirmation.
 
 Amp does not expose project skills as `/skill-name` commands. To invoke the underlying skill manually, open the palette, run **skill: invoke**, select `publishing-blog-post`, and send the article in the next message.
 
@@ -38,7 +38,7 @@ src/content/posts/understanding-event-loops.md
 That post will be published at:
 
 ```text
-https://beepbeepforty2.github.io/blog/posts/understanding-event-loops/
+https://undiscoveredmaterials.com/posts/understanding-event-loops/
 ```
 
 Copy this template:
@@ -189,10 +189,10 @@ git commit -m "Add post about event loops"
 git push
 ```
 
-Pushing to `main` starts the GitHub Actions workflow in `.github/workflows/deploy.yml`. A successful run publishes the updated site to:
+Pushing to `main` triggers the Cloudflare Pages production build. A successful deploy publishes the updated site to:
 
 ```text
-https://beepbeepforty2.github.io/blog/
+https://undiscoveredmaterials.com/
 ```
 
 Deployment usually takes less than a minute. Its status is available on the repository's **Actions** tab.
@@ -227,8 +227,8 @@ src/content.config.ts     Allowed post metadata
 src/layouts/Base.astro    Shared page layout and site navigation
 src/pages/                Home, post, About, and RSS routes
 src/styles/global.css     Site styling
-astro.config.mjs          Site URL, GitHub Pages base path, and code theme
-.github/workflows/        Automatic GitHub Pages deployment
+astro.config.mjs          Site URL and code theme
+.github/workflows/        Legacy GitHub Pages deploy (kept as redirect target)
 .agents/skills/           Project-specific Amp publishing workflow
 .amp/plugins/             Project-specific Amp command-palette actions
 ```
