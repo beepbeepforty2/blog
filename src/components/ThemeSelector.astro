@@ -38,6 +38,7 @@ const themes = [
         class="theme-btn"
         data-theme-id={t.id}
         data-mode={t.mode}
+        data-accent={t.accent}
         aria-pressed="false"
         title={`Switch to ${t.name}`}
       >
@@ -118,8 +119,10 @@ const themes = [
       const mode = modeOf(current);
       document.documentElement.setAttribute('data-theme-mode', mode);
       btns.forEach((btn) => {
-        btn.setAttribute('aria-pressed', btn.dataset.themeId === current ? 'true' : 'false');
-        if (btn.dataset.themeId === current) {
+        const active = btn.dataset.themeId === current;
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        if (active) {
+          setFavicon(btn.dataset.accent);
           btn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
         }
       });
@@ -134,6 +137,16 @@ const themes = [
       const max = strip.scrollWidth - strip.clientWidth;
       leftBtn.hidden = strip.scrollLeft <= 1;
       rightBtn.hidden = strip.scrollLeft >= max - 1;
+    }
+
+    // Recolor the ✦ favicon to the active theme's accent.
+    function setFavicon(accent) {
+      const link = document.querySelector('link[rel="icon"]');
+      if (!link || !accent) return;
+      const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
+        '<text y="0.9em" font-size="90" fill="' + accent + '">✦</text></svg>';
+      link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
     }
 
     strip.addEventListener('click', (e) => {

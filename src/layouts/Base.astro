@@ -1,5 +1,6 @@
 ---
 import 'katex/dist/katex.min.css';
+import { getCollection } from 'astro:content';
 import ThemeSelector from '../components/ThemeSelector.astro';
 import '../styles/global.css';
 
@@ -29,15 +30,37 @@ const canonical = new URL(path, Astro.site).href;
 // Google Search Console ownership token (HTML-tag method).
 // Paste the content="..." value from GSC here; leave empty to omit the tag.
 const googleSiteVerification = 'tMErjo8MKOZd0tFoQJ6v6xhdMs_Di6HARVBuwXcY_R8';
+
+// Boot-line stats (footer). Keep the themes count in sync with ThemeSelector.
+const publishedPosts = await getCollection('posts', ({ data }) => !data.draft);
+const siteLaunch = '2026-08-11'; // first deploy
+const uptimeDays = Math.floor((Date.now() - new Date(siteLaunch)) / 864e5);
 ---
 
 <!doctype html>
+<!--
+
+     ✦  undiscoveredmaterials.com  ✦
+
+   no trackers, no cookies, no dark patterns —
+   just honest HTML and one friendly cow.
+
+ ____________________________
+< hi, curious source reader! >
+ ----------------------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+-->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
-    <link rel="icon" href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>`} />
+    <link rel="icon" href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23888888%22>✦</text></svg>`} />
     <link rel="alternate" type="application/rss+xml" title={siteName} href={`${base}rss.xml`} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content={type} />
@@ -67,6 +90,26 @@ const googleSiteVerification = 'tMErjo8MKOZd0tFoQJ6v6xhdMs_Di6HARVBuwXcY_R8';
         }
       })();
     </script>
+    <script is:inline>
+      (function () {
+        var base = document.title;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduce) {
+          var i = 0;
+          var t = setInterval(function () {
+            if (document.hidden) return;
+            document.title = i % 2 === 0 ? base + ' ▊' : base;
+            if (++i >= 6) {
+              clearInterval(t);
+              document.title = base;
+            }
+          }, 450);
+        }
+        document.addEventListener('visibilitychange', function () {
+          document.title = document.hidden ? 'bye 👋' : base;
+        });
+      })();
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -90,6 +133,17 @@ const googleSiteVerification = 'tMErjo8MKOZd0tFoQJ6v6xhdMs_Di6HARVBuwXcY_R8';
     </main>
     <footer>
       <span>Built with Astro. No tracking, no cookies.</span>
+      <span class="boot-line" data-launch={siteLaunch}>
+        uptime: {uptimeDays}d · posts: {publishedPosts.length} · themes: 20 · tracking: 0
+      </span>
     </footer>
+    <script is:inline>
+      (function () {
+        var el = document.querySelector('.boot-line');
+        if (!el) return;
+        var days = Math.floor((Date.now() - new Date(el.dataset.launch)) / 864e5);
+        el.textContent = el.textContent.replace(/uptime: \d+d/, 'uptime: ' + days + 'd');
+      })();
+    </script>
   </body>
 </html>
