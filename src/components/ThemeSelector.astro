@@ -193,6 +193,9 @@ const themes = [
     align-items: center;
     gap: 0.35rem;
     overflow-x: auto;
+    /* vertical breathing room so borders/shadows aren't clipped by the
+       scroll container's sub-pixel rounding */
+    padding-block: 2px;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* legacy IE/Edge */
   }
