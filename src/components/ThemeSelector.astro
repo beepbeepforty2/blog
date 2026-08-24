@@ -24,7 +24,7 @@ const themes = [
 ];
 ---
 
-<div class="theme-strip-wrap">
+<div class="theme-strip-row">
   <button type="button" class="strip-arrow strip-arrow-left" data-scroll="left" aria-label="Scroll themes left" hidden>
     <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6" /></svg>
   </button>
@@ -55,7 +55,7 @@ const themes = [
 
 <script is:inline>
   (function () {
-    const wrap = document.querySelector('.theme-strip-wrap');
+    const wrap = document.querySelector('.theme-strip-row');
     if (!wrap) return;
     const strip = wrap.querySelector('.theme-strip');
     const leftBtn = wrap.querySelector('[data-scroll="left"]');
@@ -112,19 +112,22 @@ const themes = [
 </script>
 
 <style>
-  .theme-strip-wrap {
-    position: relative;
+  .theme-strip-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
     margin-bottom: 4rem;
   }
 
   .theme-strip {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     gap: 0.35rem;
     overflow-x: auto;
-    padding-top: 0.65rem;
-    padding-bottom: 0.35rem;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* legacy IE/Edge */
   }
@@ -179,10 +182,7 @@ const themes = [
   }
 
   .strip-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-60%);
-    z-index: 1;
+    flex: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -208,16 +208,8 @@ const themes = [
     outline-offset: 1px;
   }
 
-  .strip-arrow-left {
-    left: 0;
-  }
-
-  .strip-arrow-right {
-    right: 0;
-  }
-
   @media (max-width: 36rem) {
-    .theme-strip-wrap {
+    .theme-strip-row {
       margin-bottom: 2.5rem;
     }
 
