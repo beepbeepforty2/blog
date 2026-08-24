@@ -59,6 +59,47 @@ a:hover {
   gap: 1.25rem;
 }
 
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  color: var(--muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--accent);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+html[data-theme-mode='dark'] .theme-toggle .icon-moon {
+  display: none;
+}
+
+html[data-theme-mode='light'] .theme-toggle .icon-sun {
+  display: none;
+}
+
+/* Mode filtering for the theme strip */
+html[data-theme-mode='dark'] .theme-btn[data-mode='light'] {
+  display: none;
+}
+
+html[data-theme-mode='light'] .theme-btn[data-mode='dark'] {
+  display: none;
+}
+
 .site-name {
   font-weight: 700;
   text-decoration: none;

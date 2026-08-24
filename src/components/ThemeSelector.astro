@@ -1,26 +1,28 @@
 ---
 // Colors mirror src/styles/themes.css so each swatch previews its theme.
+// `mode` drives dark/light filtering: the toggle in the header switches mode,
+// and only themes matching the current mode are shown.
 const themes = [
-  { id: 'gruvbox-dark', name: 'Gruvbox Dark', bg: '#282828', accent: '#fe8019' },
-  { id: 'gruvbox-light', name: 'Gruvbox Light', bg: '#fbf1c7', accent: '#af3a03' },
-  { id: 'everforest-dark', name: 'Everforest Dark', bg: '#2d353b', accent: '#a7c080' },
-  { id: 'everforest-light', name: 'Everforest Light', bg: '#fdf6e3', accent: '#8da101' },
-  { id: 'catppuccin-mocha', name: 'Catppuccin Mocha', bg: '#1e1e2e', accent: '#89b4fa' },
-  { id: 'catppuccin-latte', name: 'Catppuccin Latte', bg: '#eff1f5', accent: '#1e66f5' },
-  { id: 'rose-pine', name: 'Rosé Pine', bg: '#191724', accent: '#ebbcba' },
-  { id: 'rose-pine-dawn', name: 'Rosé Pine Dawn', bg: '#faf4ed', accent: '#d7827e' },
-  { id: 'tokyo-night', name: 'Tokyo Night', bg: '#1a1b26', accent: '#7aa2f7' },
-  { id: 'tokyo-night-day', name: 'Tokyo Night Day', bg: '#e1e2e7', accent: '#2e7de9' },
-  { id: 'nord', name: 'Nord', bg: '#2e3440', accent: '#88c0d0' },
-  { id: 'kanagawa-wave', name: 'Kanagawa Wave', bg: '#1f1f28', accent: '#7e9cd8' },
-  { id: 'kanagawa-lotus', name: 'Kanagawa Lotus', bg: '#f2ecde', accent: '#4d699b' },
-  { id: 'dracula', name: 'Dracula', bg: '#282a36', accent: '#bd93f9' },
-  { id: 'one-dark', name: 'One Dark', bg: '#282c34', accent: '#61afef' },
-  { id: 'monokai-pro', name: 'Monokai Pro', bg: '#2d2a2e', accent: '#ffd866' },
-  { id: 'solarized-dark', name: 'Solarized Dark', bg: '#002b36', accent: '#268bd2' },
-  { id: 'solarized-light', name: 'Solarized Light', bg: '#fdf6e3', accent: '#268bd2' },
-  { id: 'github-dark', name: 'GitHub Dark', bg: '#0d1117', accent: '#58a6ff' },
-  { id: 'github-light', name: 'GitHub Light', bg: '#ffffff', accent: '#0969da' },
+  { id: 'gruvbox-dark', name: 'Gruvbox Dark', mode: 'dark', bg: '#282828', accent: '#fe8019' },
+  { id: 'gruvbox-light', name: 'Gruvbox Light', mode: 'light', bg: '#fbf1c7', accent: '#af3a03' },
+  { id: 'everforest-dark', name: 'Everforest Dark', mode: 'dark', bg: '#2d353b', accent: '#a7c080' },
+  { id: 'everforest-light', name: 'Everforest Light', mode: 'light', bg: '#fdf6e3', accent: '#8da101' },
+  { id: 'catppuccin-mocha', name: 'Catppuccin Mocha', mode: 'dark', bg: '#1e1e2e', accent: '#89b4fa' },
+  { id: 'catppuccin-latte', name: 'Catppuccin Latte', mode: 'light', bg: '#eff1f5', accent: '#1e66f5' },
+  { id: 'rose-pine', name: 'Rosé Pine', mode: 'dark', bg: '#191724', accent: '#ebbcba' },
+  { id: 'rose-pine-dawn', name: 'Rosé Pine Dawn', mode: 'light', bg: '#faf4ed', accent: '#d7827e' },
+  { id: 'tokyo-night', name: 'Tokyo Night', mode: 'dark', bg: '#1a1b26', accent: '#7aa2f7' },
+  { id: 'tokyo-night-day', name: 'Tokyo Night Day', mode: 'light', bg: '#e1e2e7', accent: '#2e7de9' },
+  { id: 'nord', name: 'Nord', mode: 'dark', bg: '#2e3440', accent: '#88c0d0' },
+  { id: 'kanagawa-wave', name: 'Kanagawa Wave', mode: 'dark', bg: '#1f1f28', accent: '#7e9cd8' },
+  { id: 'kanagawa-lotus', name: 'Kanagawa Lotus', mode: 'light', bg: '#f2ecde', accent: '#4d699b' },
+  { id: 'dracula', name: 'Dracula', mode: 'dark', bg: '#282a36', accent: '#bd93f9' },
+  { id: 'one-dark', name: 'One Dark', mode: 'dark', bg: '#282c34', accent: '#61afef' },
+  { id: 'monokai-pro', name: 'Monokai Pro', mode: 'dark', bg: '#2d2a2e', accent: '#ffd866' },
+  { id: 'solarized-dark', name: 'Solarized Dark', mode: 'dark', bg: '#002b36', accent: '#268bd2' },
+  { id: 'solarized-light', name: 'Solarized Light', mode: 'light', bg: '#fdf6e3', accent: '#268bd2' },
+  { id: 'github-dark', name: 'GitHub Dark', mode: 'dark', bg: '#0d1117', accent: '#58a6ff' },
+  { id: 'github-light', name: 'GitHub Light', mode: 'light', bg: '#ffffff', accent: '#0969da' },
 ];
 ---
 
@@ -35,6 +37,7 @@ const themes = [
         type="button"
         class="theme-btn"
         data-theme-id={t.id}
+        data-mode={t.mode}
         aria-pressed="false"
         title={`Switch to ${t.name}`}
       >
@@ -55,22 +58,76 @@ const themes = [
 
 <script is:inline>
   (function () {
-    const wrap = document.querySelector('.theme-strip-row');
-    if (!wrap) return;
-    const strip = wrap.querySelector('.theme-strip');
-    const leftBtn = wrap.querySelector('[data-scroll="left"]');
-    const rightBtn = wrap.querySelector('[data-scroll="right"]');
+    const row = document.querySelector('.theme-strip-row');
+    if (!row) return;
+    const strip = row.querySelector('.theme-strip');
+    const leftBtn = row.querySelector('[data-scroll="left"]');
+    const rightBtn = row.querySelector('[data-scroll="right"]');
+    const toggle = document.querySelector('[data-theme-toggle]');
+    const btns = Array.from(strip.querySelectorAll('.theme-btn'));
+    const modes = {};
+    btns.forEach((b) => {
+      modes[b.dataset.themeId] = b.dataset.mode;
+    });
 
-    function sync() {
-      const current = document.documentElement.getAttribute('data-theme') || 'gruvbox-dark';
-      strip.querySelectorAll('.theme-btn').forEach((btn) => {
-        const active = btn.dataset.themeId === current;
-        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
-        if (active) {
+    function storageGet(key) {
+      try {
+        return localStorage.getItem(key);
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function storageSet(key, value) {
+      try {
+        localStorage.setItem(key, value);
+      } catch (_) {}
+    }
+
+    function modeOf(themeId) {
+      return modes[themeId] || 'dark';
+    }
+
+    function defaultTheme(mode) {
+      const btn = btns.find((b) => b.dataset.mode === mode);
+      return btn ? btn.dataset.themeId : 'gruvbox-dark';
+    }
+
+    function currentTheme() {
+      return document.documentElement.getAttribute('data-theme') || 'gruvbox-dark';
+    }
+
+    function currentMode() {
+      return modeOf(currentTheme());
+    }
+
+    function applyTheme(themeId, persist) {
+      document.documentElement.setAttribute('data-theme', themeId);
+      const mode = modeOf(themeId);
+      document.documentElement.setAttribute('data-theme-mode', mode);
+      if (persist) {
+        storageSet('theme', themeId);
+        storageSet('theme-mode', mode);
+        storageSet('theme-' + mode, themeId);
+      }
+      syncUI();
+    }
+
+    function syncUI() {
+      const current = currentTheme();
+      const mode = modeOf(current);
+      document.documentElement.setAttribute('data-theme-mode', mode);
+      btns.forEach((btn) => {
+        btn.setAttribute('aria-pressed', btn.dataset.themeId === current ? 'true' : 'false');
+        if (btn.dataset.themeId === current) {
           btn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
         }
       });
-      updateArrows();
+      if (toggle) {
+        toggle.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        toggle.setAttribute('title', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+      requestAnimationFrame(updateArrows);
     }
 
     function updateArrows() {
@@ -82,13 +139,17 @@ const themes = [
     strip.addEventListener('click', (e) => {
       const btn = e.target.closest('.theme-btn');
       if (!btn) return;
-      const theme = btn.dataset.themeId;
-      document.documentElement.setAttribute('data-theme', theme);
-      try {
-        localStorage.setItem('theme', theme);
-      } catch (_) {}
-      sync();
+      applyTheme(btn.dataset.themeId, true);
     });
+
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const target = currentMode() === 'dark' ? 'light' : 'dark';
+        let next = storageGet('theme-' + target);
+        if (!next || modes[next] !== target) next = defaultTheme(target);
+        applyTheme(next, true);
+      });
+    }
 
     leftBtn.addEventListener('click', () => {
       strip.scrollBy({ left: -strip.clientWidth * 0.8, behavior: 'smooth' });
@@ -102,12 +163,16 @@ const themes = [
 
     window.addEventListener('storage', (e) => {
       if (e.key === 'theme' && e.newValue) {
-        document.documentElement.setAttribute('data-theme', e.newValue);
-        sync();
+        applyTheme(e.newValue, false);
       }
     });
 
-    sync();
+    // Self-heal: reconcile mode attribute with the active theme (covers
+    // visitors whose saved theme predates the mode toggle).
+    syncUI();
+    const cur = currentTheme();
+    storageSet('theme-mode', modeOf(cur));
+    storageSet('theme-' + modeOf(cur), cur);
   })();
 </script>
 
