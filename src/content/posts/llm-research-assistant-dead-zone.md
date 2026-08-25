@@ -30,20 +30,10 @@ The instinct is to fix this with better prompts, a "constitution," a carefully w
 
 LLMs succeed at two corners of this space. **Loose spec** (anything competent lands inside the huge acceptable region — this is why one-prompt websites feel miraculous) and **strong verification** (generate freely, filter mechanically — this is why theorem provers and well-tested code work).
 
-```text
-                 strong verification         weak verification
-              +-------------------------+-------------------------+
- loose spec   |  generate & filter      |  "write me a draft"     |
-              |  (theorem provers,      |  (competent landing     |
-              |   tested code)          |   pages, boilerplate)   |
-              |  → LLMs excel           |  → LLMs excel           |
-              +-------------------------+-------------------------+
- tight spec   |  scoped coding with     |  THE DEAD ZONE          |
-              |  a runnable verifier    |  (novelty, judgment,    |
-              |  → LLMs excel           |   direction, taste)     |
-              |                         |  → LLMs fail silently   |
-              +-------------------------+-------------------------+
-```
+| | **Strong verification** | **Weak verification** |
+| --- | --- | --- |
+| **Loose spec** | Generate & filter — theorem provers, well-tested code → **LLMs excel** | “Write me a draft” — competent landing pages, boilerplate → **LLMs excel** |
+| **Tight spec** | Scoped coding with a runnable verifier → **LLMs excel** | **THE DEAD ZONE** — novelty, judgment, direction, taste → **LLMs fail silently** |
 
 The dead zone is **tight spec + weak verification**: a small target the machine cannot see. And here's the uncomfortable observation — *almost everything that makes research actually research lives in the dead zone.*
 
