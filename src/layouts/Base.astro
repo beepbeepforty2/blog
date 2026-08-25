@@ -112,6 +112,7 @@ const uptimeDays = Math.floor((Date.now() - new Date(siteLaunch)) / 864e5);
     </script>
   </head>
   <body>
+    <div class="cursor-glow" aria-hidden="true"></div>
     <header class="site-header">
       <a class="site-name" href={base}>{siteName}</a>
       <div class="header-right">
@@ -143,6 +144,37 @@ const uptimeDays = Math.floor((Date.now() - new Date(siteLaunch)) / 864e5);
         if (!el) return;
         var days = Math.floor((Date.now() - new Date(el.dataset.launch)) / 864e5);
         el.textContent = el.textContent.replace(/uptime: \d+d/, 'uptime: ' + days + 'd');
+      })();
+    </script>
+    <script is:inline>
+      (function () {
+        var glow = document.querySelector('.cursor-glow');
+        if (!glow) return;
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        var hide = null;
+        var raf = null;
+        document.addEventListener(
+          'mousemove',
+          function (e) {
+            if (raf) return;
+            raf = requestAnimationFrame(function () {
+              raf = null;
+              var s = document.documentElement.style;
+              s.setProperty('--glow-x', e.clientX + 'px');
+              s.setProperty('--glow-y', e.clientY + 'px');
+              glow.style.opacity = '1';
+            });
+            clearTimeout(hide);
+            hide = setTimeout(function () {
+              glow.style.opacity = '0';
+            }, 1800);
+          },
+          { passive: true }
+        );
+        document.documentElement.addEventListener('mouseleave', function () {
+          clearTimeout(hide);
+          glow.style.opacity = '0';
+        });
       })();
     </script>
   </body>

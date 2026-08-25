@@ -58,10 +58,31 @@ body {
   min-height: 100vh;
   margin: 0 auto;
   padding: 0 1.25rem;
-  background: var(--bg);
+  background: transparent; /* page bg lives on html so the cursor glow can paint behind content */
   color: var(--text);
   line-height: 1.7;
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* Ambient cursor glow — appears behind content while the mouse moves, fades when idle. */
+.cursor-glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    36rem circle at var(--glow-x, 50vw) var(--glow-y, 50vh),
+    color-mix(in srgb, var(--accent) 7%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-glow {
+    display: none;
+  }
 }
 
 a {
