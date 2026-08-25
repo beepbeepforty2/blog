@@ -64,7 +64,8 @@ body {
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-/* Ambient cursor glow — appears behind content while the mouse moves, fades when idle. */
+/* Ambient cursor glow — appears behind content while the mouse moves, fades when idle.
+   Light themes need a stronger mix to read against bright backgrounds. */
 .cursor-glow {
   position: fixed;
   inset: 0;
@@ -77,6 +78,14 @@ body {
   );
   opacity: 0;
   transition: opacity 0.9s ease;
+}
+
+html[data-theme-mode='light'] .cursor-glow {
+  background: radial-gradient(
+    36rem circle at var(--glow-x, 50vw) var(--glow-y, 50vh),
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    transparent 72%
+  );
 }
 
 @media (prefers-reduced-motion: reduce) {
