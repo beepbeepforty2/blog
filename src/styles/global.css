@@ -319,11 +319,12 @@ h1 {
 
 .prose table {
   display: block;
-  width: min(80rem, calc(100vw - 2rem));
+  width: max-content;
+  max-width: calc(100vw - 2rem);
   margin: 2rem 50%;
+  transform: translateX(-50%);
   overflow-x: auto;
   border-collapse: collapse;
-  transform: translateX(-50%);
   font-size: 0.82rem;
   line-height: 1.5;
 }
