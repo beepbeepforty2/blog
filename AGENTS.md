@@ -1,6 +1,6 @@
 # Blog — agent instructions
 
-Static personal blog: Astro + Cloudflare Pages at <https://undiscoveredmaterials.com/>.
+Static personal blog: Astro + Cloudflare Workers static assets at <https://undiscoveredmaterials.com/>.
 `README.md` is the full reference for writing and publishing conventions. Read it before
 first substantial change in a session.
 
@@ -29,15 +29,16 @@ first substantial change in a session.
 
 ## Publishing
 
-Pushing to `main` triggers the Cloudflare Pages production build (<1 min).
+Pushing to `main` triggers the `Workers Builds: blog` production check (<1 min).
 
 - Full article publication (paste-in-chat workflow) is automated by the
   `publishing-blog-post` skill in `.agents/skills/` — prefer it over manual steps.
   Its rules take precedence over the README where they differ (e.g. `draft: false`,
   no clipboard inference).
 - Manual flow: validate (`npm run check`, `npm run build`), commit only the post
-  files, push `main`, poll the live URL for the new deployment, and verify HTTP 200
-  plus the expected content. Cloudflare deployment status is available in its dashboard.
+  files, push `main`, wait for the exact commit's `Workers Builds: blog` check to
+  succeed, then verify the live URL returns HTTP 200 with the expected content.
+  The check links to the Cloudflare build logs.
 - For substantial post revisions, set the `updated` frontmatter date.
 
 ## Safety

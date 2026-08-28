@@ -1,14 +1,13 @@
 ---
 name: publishing-blog-post
 description: "Publishes, deploys, and verifies final Astro blog content supplied directly in chat. Use when the Blog: Publish an article command requests the automated publication workflow."
-argument-hint: "[article content]"
 ---
 
 # Publishing a Blog Post
 
 Turn the final article supplied directly in chat into a post on this Astro blog and publish it without asking for intermediate approval.
 
-The `Blog: Publish an article` command first asks the user to paste the final article into chat. Never read or infer article content from the clipboard. Once the user supplies the article, the command explicitly authorizes committing the post-related changes, pushing them to this repository's `main` branch, triggering the Cloudflare Pages deploy, and verifying the live deployment. Do not ask whether to publish or deploy.
+The `Blog: Publish an article` command first asks the user to paste the final article into chat. Never read or infer article content from the clipboard. Once the user supplies the article, the command explicitly authorizes committing the post-related changes, pushing them to this repository's `main` branch, triggering the Cloudflare Workers build, and verifying the live deployment. Do not ask whether to publish or deploy.
 
 ## Required outcome
 
@@ -66,9 +65,10 @@ Fix failures and rerun the checks. Do not publish a broken build.
 1. Stage only files created or intentionally changed for this invocation.
 2. Commit with `Publish <concise article subject>`.
 3. Push the current `main` branch to `origin` without asking for confirmation.
-4. Pushing `main` triggers the Cloudflare Pages production build. Poll the final URL until the new post is live (typically under a minute; give up after five minutes and report the blocker) instead of waiting for a GitHub Actions run.
-5. Fetch the final URL at `https://undiscoveredmaterials.com/posts/<slug>/` and verify HTTP 200 plus the presence of the supplied title, content, links, tables, and math rendering.
-6. Confirm the worktree has no task-related uncommitted changes. Leave unrelated concurrent changes untouched.
+4. Record the pushed commit SHA with `git rev-parse HEAD`. Poll that exact commit's GitHub check runs for the `Workers Builds: blog` check; do not use the legacy GitHub Pages workflow. The check is exposed by `gh api repos/{owner}/{repo}/commits/<sha>/check-runs` and its `details_url` links to the Cloudflare build logs.
+5. Require `Workers Builds: blog` to complete with `success`. Give the check up to five minutes to appear and finish. If it reports `failure`, inspect or report its `details_url`; do not keep polling the public URL for a build that failed.
+6. After the Workers check succeeds, fetch `https://undiscoveredmaterials.com/posts/<slug>/` and verify HTTP 200 plus the presence of the supplied title, content, links, tables, and math rendering.
+7. Confirm the worktree has no task-related uncommitted changes. Leave unrelated concurrent changes untouched.
 
 If deployment or live verification fails, diagnose and fix the issue when possible, then commit and push the focused fix. If an external service remains unavailable, report the exact blocker and the successful local checks; do not claim publication succeeded.
 
@@ -78,4 +78,4 @@ Return only the useful outcome:
 
 - linked live post title;
 - concise local and live verification result;
-- any deployment blocker if Cloudflare Pages does not complete successfully.
+- any deployment blocker if the Cloudflare Workers build does not complete successfully.

@@ -1,6 +1,6 @@
 # Pratik’s notes
 
-A minimal static blog built with [Astro](https://astro.build/) and deployed to [Cloudflare Pages](https://pages.cloudflare.com/) at [undiscoveredmaterials.com](https://undiscoveredmaterials.com/).
+A minimal static blog built with [Astro](https://astro.build/) and deployed with [Cloudflare Workers](https://workers.cloudflare.com/) static assets at [undiscoveredmaterials.com](https://undiscoveredmaterials.com/).
 
 This README is the reference for writing, previewing, and publishing posts.
 
@@ -12,7 +12,7 @@ From an Amp thread opened in this repository:
 2. Run **Blog: Publish an article**.
 3. Paste the complete final article into the chat when prompted.
 
-The command starts the project publishing skill and requests the article in chat. The skill adds the required post metadata, performs the mechanical Markdown changes needed for publication, validates the site, commits and pushes the post, waits for the Cloudflare Pages deploy, and verifies the live URL. Running the command authorizes that complete publication workflow, so it does not pause for deployment confirmation.
+The command starts the project publishing skill and requests the article in chat. The skill adds the required post metadata, performs the mechanical Markdown changes needed for publication, validates the site, commits and pushes the post, waits for the Cloudflare Workers build, and verifies the live URL. Running the command authorizes that complete publication workflow, so it does not pause for deployment confirmation.
 
 Amp does not expose project skills as `/skill-name` commands. To invoke the underlying skill manually, open the palette, run **skill: invoke**, select `publishing-blog-post`, and send the article in the next message.
 
@@ -189,13 +189,13 @@ git commit -m "Add post about event loops"
 git push
 ```
 
-Pushing to `main` triggers the Cloudflare Pages production build. A successful deploy publishes the updated site to:
+Pushing to `main` triggers the Cloudflare Workers production build. A successful deploy publishes the updated site to:
 
 ```text
 https://undiscoveredmaterials.com/
 ```
 
-Deployment usually takes less than a minute. Deployment status and logs are available in the Cloudflare Pages dashboard. The old GitHub Pages workflow is manual-only and deploys redirect stubs from `redirect/`; it is not the production deployment path.
+Deployment usually takes less than a minute. The pushed commit receives a `Workers Builds: blog` check with a link to its logs in the Cloudflare dashboard. The old GitHub Pages workflow is manual-only and deploys redirect stubs from `redirect/`; it is not the production deployment path.
 
 ## Update an existing post
 
@@ -208,9 +208,9 @@ updated: 2026-09-02
 
 Then validate, commit, and push as usual. Do not change the filename unless the post URL should also change; old URLs are not redirected automatically.
 
-## Cloudflare Pages deployment
+## Cloudflare Workers deployment
 
-The repository uses a static Pages deployment. [`wrangler.jsonc`](wrangler.jsonc) sets `pages_build_output_dir` to `./dist` and defines the compatibility date. Build locally before deploying:
+The repository uses a Workers Builds deployment with static assets. [`wrangler.jsonc`](wrangler.jsonc) sets `assets.directory` to `./dist` and defines the compatibility date. Build locally before deploying:
 
 ```sh
 npm ci
@@ -218,7 +218,7 @@ npm run check
 npm run build
 ```
 
-Cloudflare Pages uses `main` for production and publishes the generated `dist/` directory. Do not commit `dist/` or `node_modules/`. Page routes use trailing slashes, such as `/posts/hello-world/`.
+Cloudflare Workers Builds uses `main` for production and publishes the generated `dist/` directory as static assets. Do not commit `dist/` or `node_modules/`. Page routes use trailing slashes, such as `/posts/hello-world/`.
 
 The legacy [GitHub Pages workflow](.github/workflows/deploy.yml) is retained for the previous site. It runs through `workflow_dispatch`, uploads `redirect/`, and does not deploy the Astro site.
 
@@ -251,7 +251,7 @@ src/pages/                Home, post, About, and RSS routes
 src/styles/global.css     Site styling
 astro.config.mjs          Site URL and code theme
 .github/workflows/        Legacy GitHub Pages deploy (kept as redirect target)
-wrangler.jsonc            Cloudflare Pages build-output configuration
+wrangler.jsonc            Cloudflare Workers static-assets configuration
 .agents/skills/           Project-specific Amp publishing workflow
 .amp/plugins/             Project-specific Amp command-palette actions
 ```
