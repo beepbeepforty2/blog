@@ -115,6 +115,16 @@ Syntax highlighting uses Zola’s generated light and dark Giallo styles. The si
 
 Existing punctuation-sensitive heading IDs are explicitly recorded with Zola’s `{#id}` syntax where required. Preserve those suffixes when revising a heading because they protect published deep links.
 
+## Themes and navigation
+
+The twenty palettes are defined in `static/css/themes.css`. `templates/partials/theme-selector.html` contains the picker, and `static/js/themes.js` handles selection, the light/dark toggle, favicon color, browser-storage synchronization, and horizontal positioning within the picker.
+
+`templates/base.html` contains a small inline theme bootstrap before the stylesheet links. It restores `data-theme` and `data-theme-mode` from browser storage before the first paint, preventing a page from briefly rendering in the default palette during normal full-page navigation. The storage keys are `theme`, `theme-mode`, `theme-dark`, and `theme-light`.
+
+Initial picker synchronization must remain non-animated. Intentional theme changes may animate the picker horizontally. Keep that movement local to the picker strip; viewport-level methods such as `scrollIntoView()` can move the page during navigation and make the header or picker appear to redraw. `scrollbar-gutter: stable` in `static/css/global.css` reserves consistent scrollbar space between pages of different lengths.
+
+The site uses ordinary static links rather than client-side route transitions. Navigation stability depends on the pre-paint theme bootstrap and stable layout, not on retained component state.
+
 ## Math
 
 Use dollar signs for inline LaTeX:

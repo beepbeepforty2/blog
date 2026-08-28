@@ -42,6 +42,16 @@ Pushing to `main` triggers the `Workers Builds: blog` production check (<1 min).
   The check links to the Cloudflare build logs.
 - For substantial post revisions, set the `updated` frontmatter date.
 
+## Theme behavior
+
+- Keep the inline theme bootstrap in `templates/base.html` before stylesheet links so
+  the saved palette and light/dark mode are applied before first paint.
+- Initial theme-picker synchronization must not animate. Keep picker movement local
+  to its horizontal strip; do not use `scrollIntoView()` because it may move the page
+  viewport during navigation.
+- Preserve `scrollbar-gutter: stable` in `static/css/global.css` to avoid horizontal
+  layout shifts between short and long pages.
+
 ## Safety
 
 - Commit only files related to the task at hand; leave unrelated worktree changes
