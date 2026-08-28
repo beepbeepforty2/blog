@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% set posts = get_section(path="posts/_index.md") %}
+  <section class="intro">
+    <h1>Writing</h1>
+    <p>Notes on software, systems, and the details that make them work.</p>
+  </section>
+  <ol class="post-list">
+    {% for post in posts.pages %}
+      <li>
+        <article>
+          <time datetime="{{ post.date }}">{{ post.date | date(format="%b %d, %Y") }}</time>
+          <div>
+            <h2><a href="{{ post.permalink }}">{{ post.title }}</a></h2>
+            <p>{{ post.description }}</p>
+          </div>
+        </article>
+      </li>
+    {% endfor %}
+  </ol>
+{% endblock content %}

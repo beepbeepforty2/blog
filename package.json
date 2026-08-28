@@ -1,25 +1,15 @@
 {
   "name": "blog",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "check": "astro check"
+    "dev": "bash scripts/zola.sh serve --drafts",
+    "build": "bash scripts/build.sh",
+    "preview": "python3 -m http.server 4321 --directory dist",
+    "check": "bash scripts/zola.sh check --skip-external-links && node scripts/validate-content.mjs"
   },
   "dependencies": {
-    "@astrojs/markdown-remark": "^7.2.2",
-    "@astrojs/rss": "latest",
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "latest",
-    "katex": "^0.18.4",
-    "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
-  },
-  "devDependencies": {
-    "@astrojs/check": "latest",
-    "typescript": "latest"
+    "katex": "0.18.4"
   }
 }

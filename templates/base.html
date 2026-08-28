@@ -1,0 +1,118 @@
+<!doctype html>
+<!--
+
+     ✦  undiscoveredmaterials.com  ✦
+
+   no trackers, no cookies, no dark patterns —
+   just honest HTML and one friendly cow.
+
+ ____________________________
+< hi, curious source reader! >
+ ============================
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    {% set meta_title = config.title %}
+    {% set meta_description = config.description %}
+    {% if page is defined %}
+      {% set meta_title = page.title ~ " — " ~ config.title %}
+      {% if page.description %}{% set meta_description = page.description %}{% endif %}
+    {% endif %}
+    <meta name="description" content="{{ meta_description }}">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23888888%22>✦</text></svg>">
+    <link rel="alternate" type="application/rss+xml" title="{{ config.title }}" href="/rss.xml">
+    <link rel="canonical" href="{{ current_url }}">
+    <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}">
+    <meta property="og:site_name" content="{{ config.title }}">
+    <meta property="og:title" content="{{ meta_title }}">
+    <meta property="og:description" content="{{ meta_description }}">
+    <meta property="og:url" content="{{ current_url }}">
+    <meta property="og:locale" content="en_US">
+    {% block article_meta %}{% endblock article_meta %}
+    <meta name="twitter:card" content="summary">
+    <meta name="google-site-verification" content="{{ config.extra.google_site_verification }}">
+    <title>{{ meta_title }}</title>
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/katex.min.css">
+    <link id="giallo-light" rel="stylesheet" href="/giallo-light.css" media="not all">
+    <link id="giallo-dark" rel="stylesheet" href="/giallo-dark.css" media="not all">
+    {% if config.mode == "serve" %}
+      <script src="/js/katex.min.js" defer></script>
+      <script src="/js/auto-render.min.js" defer onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: true})"></script>
+    {% endif %}
+    <script>
+      (function() {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          const theme = stored || (prefersDark ? 'gruvbox-dark' : 'gruvbox-light');
+          document.documentElement.setAttribute('data-theme', theme);
+          let mode = localStorage.getItem('theme-mode');
+          if (mode !== 'dark' && mode !== 'light') mode = prefersDark ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme-mode', mode);
+          document.getElementById('giallo-dark').media = mode === 'dark' ? 'all' : 'not all';
+          document.getElementById('giallo-light').media = mode === 'light' ? 'all' : 'not all';
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'gruvbox-dark');
+          document.documentElement.setAttribute('data-theme-mode', 'dark');
+          document.getElementById('giallo-dark').media = 'all';
+        }
+      })();
+    </script>
+    <script>
+      (function () {
+        var base = document.title;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduce) {
+          var i = 0;
+          var t = setInterval(function () {
+            if (document.hidden) return;
+            document.title = i % 2 === 0 ? base + ' ▊' : base;
+            if (++i >= 6) {
+              clearInterval(t);
+              document.title = base;
+            }
+          }, 450);
+        }
+        document.addEventListener('visibilitychange', function () {
+          document.title = document.hidden ? 'bye 👋' : base;
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="site-name" href="/">{{ config.title }}</a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <a href="/">Writing</a>
+          <a href="/about/">About</a>
+          <a href="/resume/">Résumé</a>
+          <a href="/rss.xml">RSS</a>
+        </nav>
+        <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle color mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </header>
+    {% include "partials/theme-selector.html" %}
+    <main>{% block content %}{% endblock content %}</main>
+    {% set posts = get_section(path="posts/_index.md") %}
+    <footer>
+      <span>Built with Zola. No tracking, no cookies.</span>
+      <span class="boot-line" data-launch="{{ config.extra.site_launch }}">uptime: 0d · posts: {{ posts.pages | length }} · themes: {{ config.extra.theme_count }} · tracking: 0</span>
+    </footer>
+    <script src="/js/site.js" defer></script>
+    <script src="/js/themes.js" defer></script>
+  </body>
+</html>

@@ -1,24 +1,24 @@
 ---
 name: publishing-blog-post
-description: "Publishes, deploys, and verifies final Astro blog content supplied directly in chat. Use when the Blog: Publish an article command requests the automated publication workflow."
+description: "Publishes, deploys, and verifies final Zola blog content supplied directly in chat. Use when the Blog: Publish an article command requests the automated publication workflow."
 ---
 
 # Publishing a Blog Post
 
-Turn the final article supplied directly in chat into a post on this Astro blog and publish it without asking for intermediate approval.
+Turn the final article supplied directly in chat into a post on this Zola blog and publish it without asking for intermediate approval.
 
 The `Blog: Publish an article` command first asks the user to paste the final article into chat. Never read or infer article content from the clipboard. Once the user supplies the article, the command explicitly authorizes committing the post-related changes, pushing them to this repository's `main` branch, triggering the Cloudflare Workers build, and verifying the live deployment. Do not ask whether to publish or deploy.
 
 ## Required outcome
 
-1. Read `README.md`, `src/content.config.ts`, the relevant layout and styles, and one or two representative posts before editing.
+1. Read `README.md`, `zola.toml`, the relevant templates and styles, and one or two representative posts before editing.
 2. Treat the complete article supplied in the user's next chat message as the final article. If no article content was supplied directly in chat, ask the user to paste it and stop. An `ARTICLE` marker is not required.
-3. Create one post in `src/content/posts/` with:
+3. Create one post in `content/posts/` with:
    - a concise lowercase, hyphen-separated filename derived from the title;
    - a title derived from the supplied content;
    - a one-sentence description derived from the article's scope;
-   - the current date in `YYYY-MM-DD` format;
-   - concise lowercase, hyphenated tags;
+   - `date` set to the current date in `YYYY-MM-DD` format;
+   - concise lowercase, hyphenated tags under `taxonomies.tags`;
    - `draft: false`.
 4. Remove a duplicated body H1 because the post layout renders the frontmatter title.
 5. Treat the pasted article as the final editorial outcome. Preserve its wording, structure, technical claims, examples, measurements, links, and formatting. Do not rewrite, summarize, fact-check, audit, correct, qualify, or add citations.

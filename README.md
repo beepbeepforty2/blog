@@ -1,54 +1,75 @@
 # Pratik’s notes
 
-A minimal static blog built with [Astro](https://astro.build/) and deployed with [Cloudflare Workers](https://workers.cloudflare.com/) static assets at [undiscoveredmaterials.com](https://undiscoveredmaterials.com/).
+A static personal blog built with [Zola](https://www.getzola.org/) and deployed with [Cloudflare Workers](https://workers.cloudflare.com/) static assets at [undiscoveredmaterials.com](https://undiscoveredmaterials.com/).
 
-This README is the reference for writing, previewing, and publishing posts.
+This README is the reference for writing, previewing, validating, and publishing posts.
 
-## Publish with Amp
+## Toolchain
 
-From an Amp thread opened in this repository:
+The repository pins Zola 0.23.4. `scripts/install-zola.sh` downloads the appropriate official binary for macOS or Linux, verifies its SHA-256 checksum, and stores it under the ignored `.tools/` directory.
 
-1. Type `/` or press `Ctrl+O` to open Amp's command palette.
-2. Run **Blog: Publish an article**.
-3. Paste the complete final article into the chat when prompted.
+Node is retained only for the pinned KaTeX build step and generated-site validation. Zola owns content loading, Markdown rendering, templates, routes, RSS, sitemap generation, and static output.
 
-The command starts the project publishing skill and requests the article in chat. The skill adds the required post metadata, performs the mechanical Markdown changes needed for publication, validates the site, commits and pushes the post, waits for the Cloudflare Workers build, and verifies the live URL. Running the command authorizes that complete publication workflow, so it does not pause for deployment confirmation.
-
-Amp does not expose project skills as `/skill-name` commands. To invoke the underlying skill manually, open the palette, run **skill: invoke**, select `publishing-blog-post`, and send the article in the next message.
-
-## Quick start
-
-From the repository directory:
+Install the locked Node dependency:
 
 ```sh
-npm install
-npm run dev
+npm ci
 ```
 
-Open the URL printed by Astro. The development server reloads when a post is saved.
+The first `npm run check`, `npm run build`, or `npm run dev` downloads the pinned Zola binary if it is absent.
+
+## Commands
+
+| Command | Purpose |
+| --- | --- |
+| `npm ci` | Install the locked KaTeX dependency. |
+| `npm run dev` | Start Zola’s local server with drafts and live reload. |
+| `npm run check` | Validate Zola content, internal links, post metadata, slugs, and heading structure. |
+| `npm run build` | Check the site, build into `dist/`, render math with KaTeX, and validate generated output. |
+| `npm run preview` | Serve the completed `dist/` build at `http://localhost:4321/`. |
+
+## Project map
+
+```text
+content/posts/          Markdown posts
+content/_index.md       Home section configuration
+content/posts/_index.md Post section configuration
+templates/              Tera layouts and partials
+static/css/             Site, theme, syntax, and KaTeX styles
+static/js/              Theme and browser behavior
+static/fonts/           Self-hosted site fonts
+scripts/                Zola installation, build, math, and validation scripts
+zola.toml               Site URL, Markdown, feed, sitemap, and taxonomy configuration
+wrangler.jsonc          Cloudflare Workers static-assets configuration
+.agents/skills/         Automated article publishing workflow
+.amp/plugins/           Amp command-palette integration
+```
+
+`dist/`, `.tools/`, and `node_modules/` are generated local artifacts and must not be committed.
 
 ## Create a post
 
-Create a Markdown file in `src/content/posts/`. The filename becomes the URL, so use a short, lowercase, hyphen-separated name:
+Create a Markdown file in `content/posts/`. Its filename becomes the URL slug, so use a short lowercase name separated by hyphens:
 
 ```text
-src/content/posts/understanding-event-loops.md
+content/posts/understanding-event-loops.md
 ```
 
-That post will be published at:
+The resulting URL is:
 
 ```text
 https://undiscoveredmaterials.com/posts/understanding-event-loops/
 ```
 
-Copy this template:
+Use this frontmatter structure:
 
 ```md
 ---
 title: Understanding event loops
 description: A short summary shown on the home page and in the RSS feed.
-published: 2026-08-11
-tags: [javascript, runtimes]
+date: 2026-08-28
+taxonomies:
+  tags: [javascript, runtimes]
 draft: true
 ---
 
@@ -59,83 +80,42 @@ Start writing here.
 Explain one idea at a time. Use links, lists, quotes, and code where useful.
 ```
 
-### Frontmatter fields
-
-The block between the `---` lines is the post's metadata.
+### Frontmatter
 
 | Field | Required | Purpose |
 | --- | --- | --- |
-| `title` | Yes | The post heading and browser-page title. |
-| `description` | Yes | A short summary for the home page, metadata, and RSS feed. |
-| `published` | Yes | Publication date in `YYYY-MM-DD` format. |
-| `updated` | No | Last substantial update in `YYYY-MM-DD` format. |
-| `tags` | No | A list such as `[astro, github]`. Defaults to an empty list. |
-| `draft` | No | Set to `true` to hide the post from production. Defaults to `false`. |
+| `title` | Yes | Post heading and browser title. |
+| `description` | Yes | Home-page, metadata, and RSS summary. |
+| `date` | Yes | Publication date or RFC 3339 datetime. |
+| `updated` | No | Date of the latest substantial revision. |
+| `taxonomies.tags` | No | Lowercase tags used as metadata. |
+| `draft` | No | Excludes the post unless Zola is run with `--drafts`. Defaults to `false`. |
 
-Keep `draft: true` while working. Remove the field or change it to `false` when the post is ready.
+Keep `draft: true` while writing. `npm run dev` includes drafts. Production builds exclude them.
 
-## Markdown examples
+The post template renders the frontmatter title as the only page H1. Begin body sections at `##`.
 
-### Headings
+Do not rename a published post unless its URL is intentionally changing. Old post URLs are not inferred or redirected automatically.
 
-Use the post title from frontmatter as the page's only top-level heading. Begin sections with `##`:
+## Markdown and code
 
-```md
-## Main section
+Zola renders CommonMark with GitHub-style tables, task lists, strikethrough, and fenced code blocks.
 
-### Smaller subsection
-```
-
-### Links, emphasis, lists, and quotes
-
-```md
-Read the [Astro documentation](https://docs.astro.build/).
-
-Use **bold text** sparingly and use *italics* for emphasis.
-
-- First item
-- Second item
-  - Nested item
-
-1. First step
-2. Second step
-
-> A useful quotation or callout.
-```
-
-### Inline code
-
-Wrap commands, filenames, variables, and short expressions in backticks:
-
-```md
-Run `npm run build` before publishing and edit `astro.config.mjs` to change the site configuration.
-```
-
-### Code blocks
-
-Use three backticks and include the language name for syntax highlighting:
+Use a language identifier on fenced code:
 
 ````md
 ```ts
 type Result<T> =
   | { ok: true; value: T }
   | { ok: false; error: Error };
-
-const result: Result<number> = { ok: true, value: 42 };
 ```
 ````
 
-Common language identifiers include `ts`, `js`, `tsx`, `json`, `sh`, `bash`, `python`, `go`, `rust`, `sql`, `html`, `css`, and `yaml`.
+Syntax highlighting uses Zola’s generated light and dark Giallo styles. The site’s twenty visual themes share the appropriate light or dark token palette.
 
-To show terminal input without syntax highlighting:
+Existing punctuation-sensitive heading IDs are explicitly recorded with Zola’s `{#id}` syntax where required. Preserve those suffixes when revising a heading because they protect published deep links.
 
-````md
-```text
-$ npm run build
-```
-````
-
-### Math
+## Math
 
 Use dollar signs for inline LaTeX:
 
@@ -143,7 +123,7 @@ Use dollar signs for inline LaTeX:
 The privacy budget is $(\epsilon, \delta)$ and the clipping threshold is $C$.
 ```
 
-Use double dollar signs on separate lines for a displayed equation:
+Use double dollar signs for display math:
 
 ```md
 $$
@@ -151,109 +131,73 @@ $$
 $$
 ```
 
-Math is rendered with KaTeX during the static build, so it does not require client-side JavaScript.
+`npm run build` renders math into static KaTeX HTML. Production pages do not require client-side JavaScript for equations. Zola’s development server loads the local KaTeX auto-render helper so math is visible during live preview.
 
-## Preview before publishing
+The build fails on invalid expressions. It also checks for missing KaTeX output and `katex-error` nodes.
 
-Run the development server while writing:
+## Preview and validate
+
+Start the live development server:
 
 ```sh
 npm run dev
 ```
 
-Draft posts are intentionally hidden from both local and production builds. Temporarily set `draft: false` to preview the finished page, then restore it to `true` if it is not ready to publish.
-
-Before pushing, validate the content and create a production build:
+Before every commit:
 
 ```sh
 npm run check
 npm run build
+git diff --check
 ```
 
-To inspect the generated production site locally:
+The production build verifies routes, canonical URLs, article metadata, RSS entry count, sitemap membership, redirects, static downloads, theme count, syntax styles, and build-time math.
+
+To inspect the exact production output:
 
 ```sh
 npm run preview
 ```
 
-## Publish a post
+## Publish with Amp
+
+From an Amp thread opened in this repository:
+
+1. Type `/` or press `Ctrl+O` to open the command palette.
+2. Run **Blog: Publish an article**.
+3. Paste the complete final article into the chat when prompted.
+
+The command invokes the `publishing-blog-post` project skill. It creates the Zola post, runs the validation and production build, commits only the post-related files, pushes `main`, waits for the Cloudflare Workers check, and verifies the live URL.
+
+Amp does not expose project skills as direct slash commands. To invoke it manually, run **skill: invoke**, select `publishing-blog-post`, and provide the article in the next message.
+
+## Manual publishing
 
 1. Set `draft: false` or remove the `draft` field.
-2. Check the title, description, and publication date.
-3. Run `npm run check` and `npm run build`.
-4. Commit and push to `main`:
+2. Check the title, description, date, and tags.
+3. Run `npm run check`, `npm run build`, and `git diff --check`.
+4. Commit only the intended files.
+5. Push `main`.
+6. Wait for the exact commit’s `Workers Builds: blog` check to succeed.
+7. Verify the live URL returns HTTP 200 with the expected content.
 
-```sh
-git add src/content/posts/understanding-event-loops.md
-git commit -m "Add post about event loops"
-git push
-```
-
-Pushing to `main` triggers the Cloudflare Workers production build. A successful deploy publishes the updated site to:
-
-```text
-https://undiscoveredmaterials.com/
-```
-
-Deployment usually takes less than a minute. The pushed commit receives a `Workers Builds: blog` check with a link to its logs in the Cloudflare dashboard. The old GitHub Pages workflow is manual-only and deploys redirect stubs from `redirect/`; it is not the production deployment path.
-
-## Update an existing post
-
-Edit its Markdown file and add or change the `updated` date when the revision is substantial:
-
-```yaml
-published: 2026-08-11
-updated: 2026-09-02
-```
-
-Then validate, commit, and push as usual. Do not change the filename unless the post URL should also change; old URLs are not redirected automatically.
+For substantial revisions, set or update the `updated` field.
 
 ## Cloudflare Workers deployment
 
-The repository uses a Workers Builds deployment with static assets. [`wrangler.jsonc`](wrangler.jsonc) sets `assets.directory` to `./dist` and defines the compatibility date. Build locally before deploying:
+Pushing `main` triggers the production Workers Build. The configured build command remains `npm run build`. The script installs the pinned Zola binary, creates `dist/`, and performs the KaTeX and output validation steps. `wrangler.jsonc` publishes `./dist` as static assets.
 
-```sh
-npm ci
-npm run check
-npm run build
-```
-
-Cloudflare Workers Builds uses `main` for production and publishes the generated `dist/` directory as static assets. Do not commit `dist/` or `node_modules/`. Page routes use trailing slashes, such as `/posts/hello-world/`.
-
-The legacy [GitHub Pages workflow](.github/workflows/deploy.yml) is retained for the previous site. It runs through `workflow_dispatch`, uploads `redirect/`, and does not deploy the Astro site.
-
-## Recent site changes
-
-- Added a résumé page at `/resume/` with downloadable PDF and Markdown versions.
-- Added 20 selectable themes with separate dark/light modes, persisted in local storage.
-- Added self-hosted Fantasque Sans Mono fonts.
-- Added theme-aware favicon colors, reduced-motion handling, cursor glow, text selection styling, and a tab-title effect.
-- Improved long-form post tables and diagrams for narrow screens.
-
-## Useful commands
-
-| Command | Purpose |
-| --- | --- |
-| `npm install` | Install or update local dependencies. |
-| `npm ci` | Reproduce the exact locked dependencies, as CI does. |
-| `npm run dev` | Start the local development server. |
-| `npm run check` | Validate Astro files, TypeScript, and post metadata. |
-| `npm run build` | Generate the static production site in `dist/`. |
-| `npm run preview` | Serve the generated production build locally. |
-
-## Project map
+Public routes retain trailing slashes:
 
 ```text
-src/content/posts/        Blog posts written in Markdown
-src/content.config.ts     Allowed post metadata
-src/layouts/Base.astro    Shared page layout and site navigation
-src/pages/                Home, post, About, and RSS routes
-src/styles/global.css     Site styling
-astro.config.mjs          Site URL and code theme
-.github/workflows/        Legacy GitHub Pages deploy (kept as redirect target)
-wrangler.jsonc            Cloudflare Workers static-assets configuration
-.agents/skills/           Project-specific Amp publishing workflow
-.amp/plugins/             Project-specific Amp command-palette actions
+/
+/about/
+/resume/
+/posts/<slug>/
+/rss.xml
+/sitemap.xml
 ```
 
-The generated `dist/` directory and `node_modules/` are local build artifacts and should not be committed.
+`static/_redirects` keeps `/posts` redirected to the homepage and redirects the previous Astro sitemap filenames to `/sitemap.xml`.
+
+The manual GitHub Pages workflow in `.github/workflows/deploy.yml` remains separate. It publishes the legacy redirect stubs from `redirect/` and does not deploy this site.

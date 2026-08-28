@@ -1,0 +1,37 @@
+base_url = "https://undiscoveredmaterials.com"
+title = "Pratik’s notes"
+description = "Notes on software, systems, and building things."
+default_language = "en"
+output_dir = "dist"
+compile_sass = false
+minify_html = false
+generate_feeds = true
+feed_filenames = ["rss.xml"]
+generate_sitemap = true
+generate_robots_txt = false
+taxonomies = [{ name = "tags", render = false, feed = false }]
+
+[markdown]
+bottom_footnotes = false
+insert_anchor_links = "none"
+
+[markdown.highlighting]
+style = "class"
+light_theme = "github-light"
+dark_theme = "github-dark"
+error_on_missing_language = true
+
+[slugify]
+paths = "on"
+taxonomies = "on"
+anchors = "on"
+
+[link_checker]
+internal_level = "error"
+external_level = "warn"
+
+[extra]
+site_name = "Pratik’s notes"
+site_launch = "2026-08-11"
+theme_count = 20
+google_site_verification = "tMErjo8MKOZd0tFoQJ6v6xhdMs_Di6HARVBuwXcY_R8"
