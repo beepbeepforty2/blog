@@ -53,7 +53,16 @@
     rightBtn.hidden = strip.scrollLeft >= max - 1;
   }
 
-  function syncUI() {
+  function revealButton(button, behavior) {
+    const left = button.offsetLeft;
+    const right = left + button.offsetWidth;
+    const visibleLeft = strip.scrollLeft;
+    const visibleRight = visibleLeft + strip.clientWidth;
+    if (left < visibleLeft) strip.scrollTo({ left, behavior });
+    else if (right > visibleRight) strip.scrollTo({ left: right - strip.clientWidth, behavior });
+  }
+
+  function syncUI(animate) {
     const current = currentTheme();
     const mode = modeOf(current);
     document.documentElement.setAttribute('data-theme-mode', mode);
@@ -66,7 +75,7 @@
       button.setAttribute('aria-pressed', active ? 'true' : 'false');
       if (active) {
         setFavicon(button.dataset.accent);
-        button.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+        revealButton(button, animate ? 'smooth' : 'auto');
       }
     });
     if (toggle) {
@@ -86,7 +95,7 @@
       storageSet('theme-mode', mode);
       storageSet('theme-' + mode, themeId);
     }
-    syncUI();
+    syncUI(persist);
   }
 
   strip.addEventListener('click', (event) => {
@@ -111,7 +120,7 @@
     if (event.key === 'theme' && event.newValue) applyTheme(event.newValue, false);
   });
 
-  syncUI();
+  syncUI(false);
   const current = currentTheme();
   storageSet('theme-mode', modeOf(current));
   storageSet('theme-' + modeOf(current), current);

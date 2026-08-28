@@ -40,6 +40,25 @@
     <meta name="twitter:card" content="summary">
     <meta name="google-site-verification" content="{{ config.extra.google_site_verification }}">
     <title>{{ meta_title }}</title>
+    <script>
+      (function () {
+        var lightThemes = [
+          'gruvbox-light', 'everforest-light', 'catppuccin-latte', 'rose-pine-dawn',
+          'tokyo-night-day', 'kanagawa-lotus', 'solarized-light', 'github-light'
+        ];
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored || (prefersDark ? 'gruvbox-dark' : 'gruvbox-light');
+          var mode = lightThemes.indexOf(theme) === -1 ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-theme', theme);
+          document.documentElement.setAttribute('data-theme-mode', mode);
+        } catch (_) {
+          document.documentElement.setAttribute('data-theme', 'gruvbox-dark');
+          document.documentElement.setAttribute('data-theme-mode', 'dark');
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/katex.min.css">
     <link id="giallo-light" rel="stylesheet" href="/giallo-light.css" media="not all">
@@ -49,22 +68,10 @@
       <script src="/js/auto-render.min.js" defer onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: true})"></script>
     {% endif %}
     <script>
-      (function() {
-        try {
-          const stored = localStorage.getItem('theme');
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          const theme = stored || (prefersDark ? 'gruvbox-dark' : 'gruvbox-light');
-          document.documentElement.setAttribute('data-theme', theme);
-          let mode = localStorage.getItem('theme-mode');
-          if (mode !== 'dark' && mode !== 'light') mode = prefersDark ? 'dark' : 'light';
-          document.documentElement.setAttribute('data-theme-mode', mode);
-          document.getElementById('giallo-dark').media = mode === 'dark' ? 'all' : 'not all';
-          document.getElementById('giallo-light').media = mode === 'light' ? 'all' : 'not all';
-        } catch (e) {
-          document.documentElement.setAttribute('data-theme', 'gruvbox-dark');
-          document.documentElement.setAttribute('data-theme-mode', 'dark');
-          document.getElementById('giallo-dark').media = 'all';
-        }
+      (function () {
+        var mode = document.documentElement.getAttribute('data-theme-mode') || 'dark';
+        document.getElementById('giallo-dark').media = mode === 'dark' ? 'all' : 'not all';
+        document.getElementById('giallo-light').media = mode === 'light' ? 'all' : 'not all';
       })();
     </script>
     <script>
