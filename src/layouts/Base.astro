@@ -34,7 +34,7 @@ const googleSiteVerification = 'tMErjo8MKOZd0tFoQJ6v6xhdMs_Di6HARVBuwXcY_R8';
 // Boot-line stats (footer). Keep the themes count in sync with ThemeSelector.
 const publishedPosts = await getCollection('posts', ({ data }) => !data.draft);
 const siteLaunch = '2026-08-11'; // first deploy
-const uptimeDays = Math.floor((Date.now() - new Date(siteLaunch)) / 864e5);
+const uptimeDays = Math.floor((Date.now() - new Date(siteLaunch).getTime()) / 864e5);
 ---
 
 <!doctype html>

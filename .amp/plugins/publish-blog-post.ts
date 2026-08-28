@@ -1,29 +1,16 @@
 import type { PluginAPI, PluginThread } from '@ampcode/plugin';
 
-export const description = 'Publishes a blog article copied to the macOS clipboard.';
+export const description = 'Starts the guided blog publishing workflow.';
 
 export default function (amp: PluginAPI) {
   amp.registerCommand(
     'publish-blog-post',
     {
-      title: 'Publish article from clipboard',
+      title: 'Publish an article',
       category: 'Blog',
-      description: 'Format, verify, deploy, and publish the copied article without intermediate prompts.',
+      description: 'Ask for an article in chat, then build, deploy, and publish it unchanged.',
     },
     async (ctx) => {
-      const result = await ctx.$`pbpaste`;
-      const article = result.stdout.trim();
-
-      if (result.exitCode !== 0) {
-        await ctx.ui.notify('Could not read the macOS clipboard.');
-        return;
-      }
-
-      if (!article) {
-        await ctx.ui.notify('Copy the complete article, then run this command again.');
-        return;
-      }
-
       let thread: PluginThread;
       if (ctx.thread) {
         thread = ctx.thread;
@@ -33,14 +20,10 @@ export default function (amp: PluginAPI) {
 
       await thread.appendUserMessage({
         type: 'user-message',
-        content: `Load and follow the publishing-blog-post skill. Publish the article below through its complete no-confirmation workflow. Treat everything after the ARTICLE marker as source content.
-
-ARTICLE
-
-${article}`,
+        content: `Load and follow the publishing-blog-post skill. I want to publish a new article. Ask me to paste the final article into this chat before doing anything else. Do not read from the clipboard.`,
       });
 
-      await ctx.ui.notify('Publishing the copied article…');
+      await ctx.ui.notify('Paste the final article in the chat to continue.');
     },
   );
 }
