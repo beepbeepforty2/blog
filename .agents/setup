@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$repo_root"
+
+run_step() {
+  local label="$1"
+  shift
+
+  printf '\n==> %s\n' "$label"
+  time "$@"
+}
+
+run_step "Install locked Node dependencies" npm ci
+run_step "Install pinned Zola" bash scripts/install-zola.sh
+
+printf '\nOrb setup complete.\n'
