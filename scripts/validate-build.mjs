@@ -3,10 +3,14 @@ import path from 'node:path';
 
 const output = path.resolve('dist');
 const postsDirectory = path.resolve('content/posts');
-const postSlugs = (await readdir(postsDirectory))
-  .filter((entry) => entry.endsWith('.md') && !entry.startsWith('_'))
-  .map((entry) => entry.slice(0, -3))
-  .sort();
+const entries = (await readdir(postsDirectory)).filter((entry) => entry.endsWith('.md') && !entry.startsWith('_'));
+const postSlugs = [];
+for (const entry of entries) {
+  const source = await readFile(path.join(postsDirectory, entry), 'utf8');
+  if (/^\s*draft:\s*true\s*$/m.test(source)) continue;
+  postSlugs.push(entry.slice(0, -3));
+}
+postSlugs.sort();
 const requiredFiles = [
   'index.html',
   'about/index.html',
