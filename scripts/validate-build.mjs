@@ -1,15 +1,12 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const output = path.resolve('dist');
-const postSlugs = [
-  'claude-at-the-laboratory-bench',
-  'differential-privacy-source-catalog',
-  'hello-world',
-  'llm-research-assistant-dead-zone',
-  'privacy-preserving-computer-vision',
-  'taming-biometric-leakage-safe-llava-prism',
-];
+const postsDirectory = path.resolve('content/posts');
+const postSlugs = (await readdir(postsDirectory))
+  .filter((entry) => entry.endsWith('.md') && !entry.startsWith('_'))
+  .map((entry) => entry.slice(0, -3))
+  .sort();
 const requiredFiles = [
   'index.html',
   'about/index.html',

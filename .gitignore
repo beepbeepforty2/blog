@@ -2,5 +2,7 @@ node_modules/
 dist/
 .astro/
 .tools/
-.amp/portals/
+.amp/
+.crush/
+.grok/
 .DS_Store

@@ -12,8 +12,10 @@ for (const name of (await readdir(postsDirectory)).filter((entry) => entry.endsW
     failures.push(`${name}: missing YAML frontmatter`);
     continue;
   }
+  const lines = frontmatter[1].split('\n');
   for (const field of ['title', 'description', 'date']) {
-    if (!new RegExp(`^${field}:\\s*\\S`, 'm').test(frontmatter[1])) failures.push(`${name}: missing ${field}`);
+    const hasField = lines.some((line) => new RegExp(`^${field}:\\s*\\S`).test(line.trim()));
+    if (!hasField) failures.push(`${name}: missing ${field}`);
   }
   if (/^#\s+/m.test(source.slice(frontmatter[0].length))) failures.push(`${name}: body must not contain an H1`);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(name)) failures.push(`${name}: filename is not a lowercase hyphenated slug`);

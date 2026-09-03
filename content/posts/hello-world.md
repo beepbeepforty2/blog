@@ -11,14 +11,14 @@ I’m Pratik — a Senior Machine Learning Engineer passionate about teaching ro
 
 This is a deliberately simple, static space where I write about software engineering, machine learning systems, privacy, robotics, and the things I learn along the way while building.
 
-## 🛠️ Top Skills & Focus Areas {#️-top-skills--focus-areas}
+## 🛠️ Top Skills & Focus Areas {#top-skills-focus-areas}
 
 - **Python** — My primary language of choice for ML architectures and systems.
 - **PyTorch & TensorFlow** — Deep learning, neural networks, and everything in between.
 - **LLMs & Multimodal Models** — Building, fine-tuning, evaluating, and deploying large models.
 - **Docker & Reproducibility** — Containerizing pipelines for deterministic, reproducible experiments and production environments.
 
-## 🤖 What Drives Me {#-what-drives-me}
+## 🤖 What Drives Me {#what-drives-me}
 
 Making robots learn is my thing! Whether it’s reinforcement learning, computer vision, or generative models, I love exploring how machines perceive, act, and continually improve.
 
@@ -28,7 +28,7 @@ Let’s build smarter robots and intelligent systems together.
 
 ---
 
-## ⚡ A Quick Tour of Writing Here {#-a-quick-tour-of-writing-here}
+## ⚡ A Quick Tour of Writing Here {#a-quick-tour-of-writing-here}
 
 Posts are pure Markdown files. Zola compiles them into static HTML at build time with zero client-side JavaScript overhead.
 

@@ -50,7 +50,9 @@ function renderHtml(html, filename) {
 
       const closing = token.match(/^<\/\s*([a-zA-Z0-9-]+)/);
       if (closing && ignoredElements.has(closing[1].toLowerCase())) {
-        ignoredStack.pop();
+        if (ignoredStack.length && ignoredStack[ignoredStack.length - 1] === closing[1].toLowerCase()) {
+          ignoredStack.pop();
+        }
         return token;
       }
 

@@ -49,11 +49,6 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-::selection {
-  background: var(--selection);
-  color: var(--text);
-}
-
 body {
   max-width: 46rem;
   min-height: 100vh;
