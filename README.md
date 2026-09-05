@@ -6,27 +6,24 @@ This README is the reference for writing, previewing, validating, and publishing
 
 ## Toolchain
 
-The repository pins Zola 0.23.4. `scripts/install-zola.sh` downloads the appropriate official binary for macOS or Linux, verifies its SHA-256 checksum, and stores it under the ignored `.tools/` directory.
+The repository pins Zola 0.23.4. The four official release tarballs live in `vendor/zola/` with SHA-256 sums in `vendor/SHA256SUMS`. `scripts/install-zola.sh` unpacks the matching archive after re-hashing it and stores the binary under the ignored `.tools/` directory. Install never contacts GitHub.
 
-Node is retained only for the pinned KaTeX build step and generated-site validation. Zola owns content loading, Markdown rendering, templates, routes, RSS, sitemap generation, and static output.
+KaTeX 0.18.4 is vendored under `vendor/katex/` (the ESM renderer) with its declared dependency `commander` 8.3.0 under `vendor/commander/`. Node is used only as a local interpreter for math rendering and generated-site validation. `package.json` has no dependencies; it exists so Cloudflare’s default `npm run build` can call `bash scripts/build.sh`.
 
-Install the locked Node dependency:
+The site face is Fantasque Sans Mono, vendored under `vendor/fantasque/` (OFL) and served from `static/fonts/`. Those four `.woff2` files are the original copies; they are not fetched at build time. KaTeX keeps its shipped `ttf`/`woff`/`woff2` set under `static/css/fonts/`.
 
-```sh
-npm ci
-```
-
-The first `npm run check`, `npm run build`, or `npm run dev` downloads the pinned Zola binary if it is absent.
+The first `make check`, `make build`, or `make dev` unpacks the pinned Zola binary if it is absent.
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
-| `npm ci` | Install the locked KaTeX dependency. |
-| `npm run dev` | Start Zola’s local server with drafts and live reload. |
-| `npm run check` | Validate Zola content, internal links, post metadata, slugs, and heading structure. |
-| `npm run build` | Check the site, build into `dist/`, render math with KaTeX, and validate generated output. |
-| `npm run preview` | Serve the completed `dist/` build at `http://localhost:4321/`. |
+| `make dev` | Start Zola’s local server with drafts and live reload. |
+| `make check` | Validate Zola content, internal links, post metadata, slugs, and heading structure. |
+| `make build` | Check the site, build into `dist/`, render math with KaTeX, and validate generated output. |
+| `make preview` | Serve the completed `dist/` build at `http://localhost:4321/`. |
+
+Equivalent scripts: `scripts/zola.sh serve --drafts`, `scripts/check.sh`, `scripts/build.sh`, and `python3 -m http.server 4321 --directory dist`.
 
 ## Project map
 
@@ -37,8 +34,9 @@ content/posts/_index.md Post section configuration
 templates/              Tera layouts and partials
 static/css/             Site, theme, syntax, and KaTeX styles
 static/js/              Theme and browser behavior
-static/fonts/           Self-hosted site fonts
+static/fonts/           Served Fantasque Sans Mono files
 scripts/                Zola installation, build, math, and validation scripts
+vendor/                 Pinned Zola tarballs, KaTeX, commander, and Fantasque
 zola.toml               Site URL, Markdown, feed, sitemap, and taxonomy configuration
 wrangler.jsonc          Cloudflare Workers static-assets configuration
 .agents/skills/         Automated article publishing workflow
@@ -91,7 +89,7 @@ Explain one idea at a time. Use links, lists, quotes, and code where useful.
 | `taxonomies.tags` | No | Lowercase tags used as metadata. |
 | `draft` | No | Excludes the post unless Zola is run with `--drafts`. Defaults to `false`. |
 
-Keep `draft: true` while writing. `npm run dev` includes drafts. Production builds exclude them.
+Keep `draft: true` while writing. `make dev` includes drafts. Production builds exclude them.
 
 The post template renders the frontmatter title as the only page H1. Begin body sections at `##`.
 
@@ -141,23 +139,23 @@ $$
 $$
 ```
 
-`npm run build` renders math into static KaTeX HTML. Production pages do not require client-side JavaScript for equations. Zola’s development server loads the local KaTeX auto-render helper so math is visible during live preview.
+`make build` renders math into static KaTeX HTML from the vendored KaTeX module. Production pages do not require client-side JavaScript for equations. `make dev` does not run that post-processor: TeX delimiters stay visible as source until you build. Inspect rendered math with `make build` and `make preview`.
 
-The build fails on invalid expressions. It also checks for missing KaTeX output and `katex-error` nodes.
+The build fails on invalid expressions. It also checks for missing KaTeX output, `katex-error` nodes, and the vendored Fantasque files in the generated site.
 
 ## Preview and validate
 
 Start the live development server:
 
 ```sh
-npm run dev
+make dev
 ```
 
 Before every commit:
 
 ```sh
-npm run check
-npm run build
+make check
+make build
 git diff --check
 ```
 
@@ -166,7 +164,7 @@ The production build verifies routes, canonical URLs, article metadata, RSS entr
 To inspect the exact production output:
 
 ```sh
-npm run preview
+make preview
 ```
 
 ## Publish with Amp
@@ -185,7 +183,7 @@ Amp does not expose project skills as direct slash commands. To invoke it manual
 
 1. Set `draft: false` or remove the `draft` field.
 2. Check the title, description, date, and tags.
-3. Run `npm run check`, `npm run build`, and `git diff --check`.
+3. Run `make check`, `make build`, and `git diff --check`.
 4. Commit only the intended files.
 5. Push `main`.
 6. Wait for the exact commit’s `Workers Builds: blog` check to succeed.
@@ -195,7 +193,7 @@ For substantial revisions, set or update the `updated` field.
 
 ## Cloudflare Workers deployment
 
-Pushing `main` triggers the production Workers Build. The configured build command remains `npm run build`. The script installs the pinned Zola binary, creates `dist/`, and performs the KaTeX and output validation steps. `wrangler.jsonc` publishes `./dist` as static assets.
+Pushing `main` triggers the production Workers Build. Prefer build command `bash scripts/build.sh`. If the dashboard still runs `npm run build`, that script is the same command. The build unpacks vendored Zola, creates `dist/`, and performs the KaTeX and output validation steps. Node must be available on the builder. `wrangler.jsonc` publishes `./dist` as static assets.
 
 Public routes retain trailing slashes:
 

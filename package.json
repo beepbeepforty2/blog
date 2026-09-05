@@ -1,15 +1,8 @@
 {
   "name": "blog",
-  "type": "module",
-  "version": "0.2.0",
   "private": true,
+  "description": "Cloudflare Workers Builds still invokes npm run build. This file has no dependencies; the script calls bash scripts/build.sh.",
   "scripts": {
-    "dev": "bash scripts/zola.sh serve --drafts",
-    "build": "bash scripts/build.sh",
-    "preview": "python3 -m http.server 4321 --directory dist",
-    "check": "bash scripts/zola.sh check --skip-external-links && node scripts/validate-content.mjs"
-  },
-  "dependencies": {
-    "katex": "0.18.4"
+    "build": "bash scripts/build.sh"
   }
 }

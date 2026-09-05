@@ -1,0 +1,6 @@
+{
+  "name": "katex",
+  "version": "0.18.4",
+  "license": "MIT",
+  "description": "Vendored KaTeX 0.18.4 ESM build. Archive hash is in vendor/SHA256SUMS."
+}

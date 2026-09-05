@@ -45,8 +45,8 @@ The `Blog: Publish an article` command first asks the user to paste the final ar
 Run:
 
 ```sh
-npm run check
-npm run build
+make check
+make build
 git diff --check
 ```
 

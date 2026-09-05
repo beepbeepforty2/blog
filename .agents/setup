@@ -12,7 +12,6 @@ run_step() {
   time "$@"
 }
 
-run_step "Install locked Node dependencies" npm ci
-run_step "Install pinned Zola" bash scripts/install-zola.sh
+run_step "Install pinned Zola from vendor/zola" bash scripts/install-zola.sh
 
 printf '\nOrb setup complete.\n'

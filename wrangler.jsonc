@@ -1,5 +1,8 @@
 {
   "name": "blog",
+  // Workers Builds: set dashboard build command to bash scripts/build.sh
+  // (package.json scripts.build is the same command, for npm run build).
+  // Node is required on the builder for KaTeX and validators.
   "compatibility_date": "2026-08-24",
   "assets": {
     "directory": "./dist"

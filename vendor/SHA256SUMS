@@ -1,0 +1,21 @@
+# Provenance hashes. Build and install never fetch these archives.
+
+# Zola v0.23.4 GitHub release tarballs in vendor/zola/
+303b8e1f3251a6250e47f811eda143316f653c22201faa66777d48ac499c0ee3  zola/zola-v0.23.4-aarch64-apple-darwin.tar.gz
+e79edcba2e8d03d22065c9cb8fa2e3abf07b823ef17f00abdc060188dceabba7  zola/zola-v0.23.4-x86_64-apple-darwin.tar.gz
+54d1a347781b2f32330914fcc02def81c7e3ddb6111b36d1cc89c06557aed1de  zola/zola-v0.23.4-x86_64-unknown-linux-gnu.tar.gz
+21bb37a4f3bbac663cf8f04df9b51ac6bc154acfe2cf2c3e9ea162b4951487b6  zola/zola-v0.23.4-aarch64-unknown-linux-gnu.tar.gz
+
+# npm pack katex@0.18.4 — extracted to vendor/katex/katex.mjs
+# Served CSS and fonts (ttf/woff/woff2, as shipped) live under static/css/
+0090b1ebccc77d1402ec95e85ee539e1da514d6cd6934156c00baf39dcb0e3aa  katex-0.18.4.tgz
+
+# Fantasque Sans Mono (OFL). Bytes in vendor/fantasque/ match static/fonts/.
+e17a23da11a1eb3b0aa1a07c67a7eb9257b8a2b17e4389df7b70e8b51002dee4  fantasque/FantasqueSansMono-Bold.woff2
+81720060dd260e9f9ab22693763cacec3a168754cc9df82c1f6341cc067854a0  fantasque/FantasqueSansMono-BoldItalic.woff2
+e41507fbf7e59cc1b17e9df1ea6a586dd84b5ec5327f6b8ce34d9ae7e03449a0  fantasque/FantasqueSansMono-Italic.woff2
+9275f4d5df297aac90080131ad11a79700e977dc4b90ba439d4281e4e24ef7f9  fantasque/FantasqueSansMono-Regular.woff2
+
+# npm pack commander@8.3.0 — extracted to vendor/commander/
+# katex's only declared dependency; this repo does not import it.
+1b38e65f9229a84060ca5d041a58e3bc1ea374da6d933f9060ca86a67949c10b  commander-8.3.0.tgz

@@ -1,6 +1,6 @@
 @import './themes.css';
 
-/* Fantasque Sans Mono — self-hosted (github.com/belluzj/fantasque-sans, OFL) */
+/* Fantasque Sans Mono — vendored (vendor/fantasque, OFL; github.com/belluzj/fantasque-sans) */
 @font-face {
   font-family: 'Fantasque Sans Mono';
   src: url('/fonts/FantasqueSansMono-Regular.woff2') format('woff2');

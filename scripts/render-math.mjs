@@ -1,6 +1,6 @@
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import katex from 'katex';
+import katex from '../vendor/katex/katex.mjs';
 
 const outputDirectory = path.resolve('dist');
 const ignoredElements = new Set(['code', 'pre', 'script', 'style', 'textarea']);
