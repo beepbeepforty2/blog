@@ -10,6 +10,8 @@ The repository pins Zola 0.23.4. The four official release tarballs live in `ven
 
 KaTeX 0.18.4 is vendored under `vendor/katex/` (the ESM renderer) with its declared dependency `commander` 8.3.0 under `vendor/commander/`. Node is used only as a local interpreter for math rendering and generated-site validation. There is no `package.json` and no `npm ci`.
 
+The site face is Fantasque Sans Mono, vendored under `vendor/fantasque/` (OFL) and served from `static/fonts/`. Those four `.woff2` files are the original copies; they are not fetched at build time. KaTeX keeps its shipped `ttf`/`woff`/`woff2` set under `static/css/fonts/`.
+
 The first `make check`, `make build`, or `make dev` unpacks the pinned Zola binary if it is absent.
 
 ## Commands
@@ -32,9 +34,9 @@ content/posts/_index.md Post section configuration
 templates/              Tera layouts and partials
 static/css/             Site, theme, syntax, and KaTeX styles
 static/js/              Theme and browser behavior
-static/fonts/           Self-hosted site fonts
+static/fonts/           Served Fantasque Sans Mono files
 scripts/                Zola installation, build, math, and validation scripts
-vendor/                 Pinned Zola tarballs, KaTeX, and commander
+vendor/                 Pinned Zola tarballs, KaTeX, commander, and Fantasque
 zola.toml               Site URL, Markdown, feed, sitemap, and taxonomy configuration
 wrangler.jsonc          Cloudflare Workers static-assets configuration
 .agents/skills/         Automated article publishing workflow
@@ -139,7 +141,7 @@ $$
 
 `make build` renders math into static KaTeX HTML from the vendored KaTeX module. Production pages do not require client-side JavaScript for equations. `make dev` does not run that post-processor: TeX delimiters stay visible as source until you build. Inspect rendered math with `make build` and `make preview`.
 
-KaTeX ships only `.woff2` fonts. The build fails on invalid expressions. It also checks for missing KaTeX output, `katex-error` nodes, and leftover `.ttf`/`.woff` math fonts.
+The build fails on invalid expressions. It also checks for missing KaTeX output, `katex-error` nodes, and the vendored Fantasque files in the generated site.
 
 ## Preview and validate
 

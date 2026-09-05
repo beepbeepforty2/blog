@@ -75,8 +75,13 @@ try {
 
 const katexFonts = (await readdir(path.join(output, 'css/fonts'))).filter((name) => name.startsWith('KaTeX_'));
 if (!katexFonts.length) throw new Error('No KaTeX fonts were copied into dist/css/fonts');
-for (const name of katexFonts) {
-  if (!name.endsWith('.woff2')) throw new Error(`Unexpected KaTeX font format: ${name}`);
-}
+
+const siteFonts = [
+  'FantasqueSansMono-Regular.woff2',
+  'FantasqueSansMono-Bold.woff2',
+  'FantasqueSansMono-Italic.woff2',
+  'FantasqueSansMono-BoldItalic.woff2',
+];
+for (const name of siteFonts) await access(path.join(output, 'fonts', name));
 
 console.log('Generated routes, metadata, feeds, sitemap, assets, themes, and math are valid.');
