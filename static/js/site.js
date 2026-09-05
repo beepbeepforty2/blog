@@ -50,7 +50,48 @@
 
   const glow = document.querySelector('.cursor-glow');
   if (!glow || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.matchMedia('(pointer: coarse)').matches) return;
+
+  const style = document.documentElement.style;
+  const coarse = window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(hover: none)').matches;
+
+  if (coarse) {
+    let x = 50;
+    let y = 36;
+    let targetX = 50;
+    let targetY = 36;
+    let moving = null;
+    let hide = null;
+
+    function paint() {
+      moving = null;
+      x += (targetX - x) * 0.07;
+      y += (targetY - y) * 0.07;
+      style.setProperty('--glow-x', x + 'vw');
+      style.setProperty('--glow-y', y + 'vh');
+      if (Math.abs(targetX - x) > 0.08 || Math.abs(targetY - y) > 0.08) {
+        moving = requestAnimationFrame(paint);
+      }
+    }
+
+    window.addEventListener(
+      'scroll',
+      function () {
+        const max = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - window.innerHeight;
+        const t = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        targetX = 22 + t * 56;
+        targetY = 26 + Math.sin(t * Math.PI) * 38;
+        glow.style.opacity = '1';
+        clearTimeout(hide);
+        hide = setTimeout(function () {
+          glow.style.opacity = '0';
+        }, 1800);
+        if (!moving) moving = requestAnimationFrame(paint);
+      },
+      { passive: true },
+    );
+    return;
+  }
+
   let hide = null;
   let frame = null;
   document.addEventListener(
@@ -59,7 +100,6 @@
       if (frame) return;
       frame = requestAnimationFrame(function () {
         frame = null;
-        const style = document.documentElement.style;
         style.setProperty('--glow-x', event.clientX + 'px');
         style.setProperty('--glow-y', event.clientY + 'px');
         glow.style.opacity = '1';
