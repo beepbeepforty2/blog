@@ -8,7 +8,7 @@ This README is the reference for writing, previewing, validating, and publishing
 
 The repository pins Zola 0.23.4. The four official release tarballs live in `vendor/zola/` with SHA-256 sums in `vendor/SHA256SUMS`. `scripts/install-zola.sh` unpacks the matching archive after re-hashing it and stores the binary under the ignored `.tools/` directory. Install never contacts GitHub.
 
-KaTeX 0.18.4 is vendored under `vendor/katex/` (the ESM renderer) with its declared dependency `commander` 8.3.0 under `vendor/commander/`. Node is used only as a local interpreter for math rendering and generated-site validation. There is no `package.json` and no `npm ci`.
+KaTeX 0.18.4 is vendored under `vendor/katex/` (the ESM renderer) with its declared dependency `commander` 8.3.0 under `vendor/commander/`. Node is used only as a local interpreter for math rendering and generated-site validation. `package.json` has no dependencies; it exists so Cloudflare’s default `npm run build` can call `bash scripts/build.sh`.
 
 The site face is Fantasque Sans Mono, vendored under `vendor/fantasque/` (OFL) and served from `static/fonts/`. Those four `.woff2` files are the original copies; they are not fetched at build time. KaTeX keeps its shipped `ttf`/`woff`/`woff2` set under `static/css/fonts/`.
 
@@ -193,7 +193,7 @@ For substantial revisions, set or update the `updated` field.
 
 ## Cloudflare Workers deployment
 
-Pushing `main` triggers the production Workers Build. The build command must be `bash scripts/build.sh` (not `npm run build`). The script unpacks the vendored Zola binary, creates `dist/`, and performs the KaTeX and output validation steps. Node must be available on the builder; npm is not used. `wrangler.jsonc` publishes `./dist` as static assets.
+Pushing `main` triggers the production Workers Build. Prefer build command `bash scripts/build.sh`. If the dashboard still runs `npm run build`, that script is the same command. The build unpacks vendored Zola, creates `dist/`, and performs the KaTeX and output validation steps. Node must be available on the builder. `wrangler.jsonc` publishes `./dist` as static assets.
 
 Public routes retain trailing slashes:
 
