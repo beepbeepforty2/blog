@@ -58,8 +58,8 @@ body {
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-/* Ambient cursor glow — appears behind content while the mouse moves, fades when idle.
-   Light themes need a stronger mix to read against bright backgrounds. */
+/* Ambient glow — follows the cursor on fine pointers; on touch it drifts
+   slowly with scroll (not the finger) and fades when idle. */
 .cursor-glow {
   position: fixed;
   inset: 0;
