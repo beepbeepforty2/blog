@@ -45,6 +45,8 @@ Pushing to `main` triggers the `Workers Builds: blog` production check (<1 min).
 
 - Keep the inline theme bootstrap in `templates/base.html` before stylesheet links so
   the saved palette and light/dark mode are applied before first paint.
+- Syntax highlighting stylesheets stay `media="not all"` until `themes.js` enables the
+  matching sheet so they do not block first paint on navigation.
 - Initial theme-picker synchronization must not animate. Keep picker movement local
   to its horizontal strip; do not use `scrollIntoView()` because it may move the page
   viewport during navigation.

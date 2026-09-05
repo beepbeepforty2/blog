@@ -25,6 +25,7 @@ const requiredFiles = [
   'css/katex.min.css',
   'giallo-light.css',
   'giallo-dark.css',
+  '_headers',
   ...postSlugs.map((slug) => `posts/${slug}/index.html`),
 ];
 
@@ -34,6 +35,10 @@ const index = await readFile(path.join(output, 'index.html'), 'utf8');
 const themeCount = (index.match(/data-theme-id=/g) || []).length;
 if (themeCount !== 20) throw new Error(`Expected 20 themes, found ${themeCount}`);
 if (!index.includes('Built with Zola.')) throw new Error('Footer does not identify the Zola build');
+if ((index.match(/rel="preload"[^>]+as="font"/g) || []).length !== 1) throw new Error('Home page should preload only the Regular site font');
+if (!index.includes('/css/global.css?h=')) throw new Error('Home page is missing a cache-busted global stylesheet');
+if (!index.includes('/css/themes.css?h=')) throw new Error('Home page is missing a cache-busted theme stylesheet');
+if (index.includes('katex.min.css')) throw new Error('Home page should not load KaTeX CSS');
 
 for (const slug of postSlugs) {
   const html = await readFile(path.join(output, 'posts', slug, 'index.html'), 'utf8');
@@ -48,6 +53,7 @@ for (const slug of postSlugs) {
 
 const mathPost = await readFile(path.join(output, 'posts/privacy-preserving-computer-vision/index.html'), 'utf8');
 if (!mathPost.includes('class="katex"')) throw new Error('Expected build-time KaTeX output was not found');
+if (!mathPost.includes('katex.min.css')) throw new Error('Math post is missing KaTeX CSS');
 
 const rss = await readFile(path.join(output, 'rss.xml'), 'utf8');
 if ((rss.match(/<item>/g) || []).length !== postSlugs.length) throw new Error('RSS item count mismatch');
@@ -64,6 +70,11 @@ if (!robots.includes('https://undiscoveredmaterials.com/sitemap.xml')) throw new
 const redirects = await readFile(path.join(output, '_redirects'), 'utf8');
 for (const rule of ['/posts / 301', '/posts/ / 301', '/sitemap-index.xml /sitemap.xml 301', '/sitemap-0.xml /sitemap.xml 301']) {
   if (!redirects.includes(rule)) throw new Error(`Missing redirect rule: ${rule}`);
+}
+
+const assetHeaders = await readFile(path.join(output, '_headers'), 'utf8');
+for (const rule of ['/fonts/*', '/css/*', '/js/*', 'max-age=31536000']) {
+  if (!assetHeaders.includes(rule)) throw new Error(`Missing asset cache rule: ${rule}`);
 }
 
 try {
