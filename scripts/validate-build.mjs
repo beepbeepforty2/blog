@@ -73,4 +73,10 @@ try {
   if (error.code !== 'ENOENT') throw error;
 }
 
+const katexFonts = (await readdir(path.join(output, 'css/fonts'))).filter((name) => name.startsWith('KaTeX_'));
+if (!katexFonts.length) throw new Error('No KaTeX fonts were copied into dist/css/fonts');
+for (const name of katexFonts) {
+  if (!name.endsWith('.woff2')) throw new Error(`Unexpected KaTeX font format: ${name}`);
+}
+
 console.log('Generated routes, metadata, feeds, sitemap, assets, themes, and math are valid.');

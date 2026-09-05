@@ -2,10 +2,11 @@
 set -euo pipefail
 
 version="0.23.4"
-target_dir=".tools/zola/$version"
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+target_dir="$repo_root/.tools/zola/$version"
 target="$target_dir/zola"
 
-if [[ -x "$target" ]] && [[ "$($target --version)" == "zola $version" ]]; then
+if [[ -x "$target" ]] && [[ "$("$target" --version)" == "zola $version" ]]; then
   exit 0
 fi
 
@@ -32,16 +33,16 @@ case "$(uname -s)-$(uname -m)" in
     ;;
 esac
 
-download="$(mktemp "${TMPDIR:-/tmp}/zola-${version}.XXXXXX")"
-trap 'rm -f "$download"' EXIT
-url="https://github.com/getzola/zola/releases/download/v${version}/${archive}"
-
-curl --fail --location --retry 3 --retry-all-errors --retry-delay 2 --connect-timeout 30 --max-time 300 "$url" --output "$download"
+archive_path="$repo_root/vendor/zola/$archive"
+if [[ ! -f "$archive_path" ]]; then
+  echo "Missing vendored Zola archive: $archive_path" >&2
+  exit 1
+fi
 
 if command -v sha256sum >/dev/null 2>&1; then
-  actual="$(sha256sum "$download" | awk '{print $1}')"
+  actual="$(sha256sum "$archive_path" | awk '{print $1}')"
 else
-  actual="$(shasum -a 256 "$download" | awk '{print $1}')"
+  actual="$(shasum -a 256 "$archive_path" | awk '{print $1}')"
 fi
 
 if [[ "$actual" != "$checksum" ]]; then
@@ -50,5 +51,5 @@ if [[ "$actual" != "$checksum" ]]; then
 fi
 
 mkdir -p "$target_dir"
-tar -xzf "$download" -C "$target_dir" zola
+tar -xzf "$archive_path" -C "$target_dir" zola
 chmod +x "$target"

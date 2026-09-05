@@ -8,11 +8,10 @@ first substantial change in a session.
 
 | Command | Purpose |
 | --- | --- |
-| `npm ci` | Reproduce locked dependencies (CI parity) |
-| `npm run dev` | Local dev server with hot reload |
-| `npm run check` | Validate Zola content, links, and post metadata — run before every commit |
-| `npm run build` | Build Zola, render KaTeX, and validate `dist/` — run before every push |
-| `npm run preview` | Serve built site locally |
+| `make dev` | Local dev server with drafts |
+| `make check` | Validate Zola content, links, and post metadata — run before every commit |
+| `make build` | Build Zola, render KaTeX, and validate `dist/` — run before every push |
+| `make preview` | Serve built site locally |
 
 ## Posts
 
@@ -26,7 +25,7 @@ first substantial change in a session.
 - Math: `$...$` inline, `$$...$$` display. KaTeX renders at build time; never convert
   plain text to LaTeX, and check built HTML for `katex-error` nodes or unrendered `$`
   delimiters when a post contains math.
-- `draft: true` hides a post from production; `npm run dev` includes drafts.
+- `draft: true` hides a post from production; `make dev` includes drafts. Math is rendered at `make build` time only.
 
 ## Publishing
 
@@ -36,7 +35,7 @@ Pushing to `main` triggers the `Workers Builds: blog` production check (<1 min).
   `publishing-blog-post` skill in `.agents/skills/` — prefer it over manual steps.
   Its rules take precedence over the README where they differ (e.g. `draft: false`,
   no clipboard inference).
-- Manual flow: validate (`npm run check`, `npm run build`), commit only the post
+- Manual flow: validate (`make check`, `make build`), commit only the post
   files, push `main`, wait for the exact commit's `Workers Builds: blog` check to
   succeed, then verify the live URL returns HTTP 200 with the expected content.
   The check links to the Cloudflare build logs.

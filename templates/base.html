@@ -86,10 +86,6 @@
     <link rel="stylesheet" href="/css/katex.min.css">
     <link id="giallo-light" rel="stylesheet" href="/giallo-light.css" media="not all">
     <link id="giallo-dark" rel="stylesheet" href="/giallo-dark.css" media="not all">
-    {% if config.mode == "serve" %}
-      <script src="/js/katex.min.js" defer></script>
-      <script src="/js/auto-render.min.js" defer onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}], throwOnError: true})"></script>
-    {% endif %}
     <script>
       (function () {
         var mode = document.documentElement.getAttribute('data-theme-mode') || 'dark';

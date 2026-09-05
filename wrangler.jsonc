@@ -1,5 +1,7 @@
 {
   "name": "blog",
+  // Workers Builds command: bash scripts/build.sh
+  // Node is required on the builder for KaTeX and validators; npm is not.
   "compatibility_date": "2026-08-24",
   "assets": {
     "directory": "./dist"
