@@ -10,7 +10,7 @@
     {% for post in posts.pages %}
       <li>
         <article>
-          <time datetime="{{ post.date }}">{{ post.date | date(format="%b %d, %Y") }}</time>
+          <time datetime="{{ post.date | date(format='%Y-%m-%dT%H:%M:%S.000Z', timezone='UTC') }}">{{ post.date | date(format="%b %d, %Y", timezone="UTC") }}</time>
           <div>
             <h2><a href="{{ post.permalink }}">{{ post.title }}</a></h2>
             <p>{{ post.description }}</p>

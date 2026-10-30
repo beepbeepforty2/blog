@@ -3,7 +3,8 @@ import path from 'node:path';
 import katex from '../vendor/katex/katex.mjs';
 
 const outputDirectory = path.resolve('dist');
-const ignoredElements = new Set(['code', 'pre', 'script', 'style', 'textarea']);
+// <head> and <header> hold the page and post titles, which stay plain text.
+const ignoredElements = new Set(['head', 'header', 'code', 'pre', 'script', 'style', 'textarea']);
 
 function decodeEntities(value) {
   return value
@@ -30,11 +31,15 @@ function renderExpression(expression, displayMode, filename) {
 }
 
 function renderText(text, filename) {
-  const withDisplays = text.replace(/(?<!\\)\$\$([\s\S]+?)(?<!\\)\$\$/g, (_, expression) =>
-    renderExpression(expression.trim(), true, filename),
-  );
-  return withDisplays.replace(/(?<!\\)\$([^$\n]+?)(?<!\\)\$/g, (_, expression) =>
-    renderExpression(expression.trim(), false, filename),
+  // One pass so `\$` inside an expression stays part of it. Markdown `\\$`
+  // arrives as `\$` and is emitted as an entity, i.e. a literal dollar sign.
+  return text.replace(
+    /(?<!\\)\$\$([\s\S]+?)(?<!\\)\$\$|(?<!\\)\$((?:\\.|[^\\$\n])+?)\$|\\\$/g,
+    (_, display, inline) => {
+      if (display !== undefined) return renderExpression(display.trim(), true, filename);
+      if (inline !== undefined) return renderExpression(inline.trim(), false, filename);
+      return '&#36;';
+    },
   );
 }
 

@@ -48,7 +48,9 @@ for (const slug of postSlugs) {
   if (html.includes('katex-error')) throw new Error(`${slug}: contains a KaTeX error`);
   if (html.includes('/_astro/')) throw new Error(`${slug}: contains an Astro asset URL`);
   if (html.includes('/js/katex.min.js') || html.includes('/js/auto-render.min.js')) throw new Error(`${slug}: production math depends on browser JavaScript`);
-  if (/(?<!\\)\$[^$\n]+(?<!\\)\$/.test(html)) throw new Error(`${slug}: contains an unrendered math delimiter`);
+  // Only body prose is math-rendered; the head, headers, and code keep literal dollar signs.
+  const prose = html.slice(html.indexOf('<body')).replace(/<(header|pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/g, '');
+  if (/(?<!\\)\$[^$\n]+(?<!\\)\$/.test(prose)) throw new Error(`${slug}: contains an unrendered math delimiter`);
 }
 
 const mathPost = await readFile(path.join(output, 'posts/privacy-preserving-computer-vision/index.html'), 'utf8');

@@ -141,6 +141,8 @@ $$
 
 `make build` renders math into static KaTeX HTML from the vendored KaTeX module. Production pages do not require client-side JavaScript for equations. `make dev` does not run that post-processor: TeX delimiters stay visible as source until you build. Inspect rendered math with `make build` and `make preview`.
 
+For a literal dollar sign in prose, write `\\$` (for example `\\$5`); it renders as `$`. Dollar signs in code spans, code blocks, and post titles stay literal; titles are never rendered as math.
+
 The build fails on invalid expressions. It also checks for missing KaTeX output, `katex-error` nodes, and the vendored Fantasque files in the generated site.
 
 ## Preview and validate
