@@ -58,6 +58,8 @@ Also inspect the generated post in `dist/posts/<slug>/index.html` and verify:
 - there are no `katex-error` nodes;
 - no source `$...$` delimiters remain unrendered.
 
+If the article uses `$` as a currency or shell sign in prose, escape it as `\\$` in the Markdown; otherwise two such signs on one line render as math. This is a rendering fix, not an editorial change.
+
 Fix failures and rerun the checks. Do not publish a broken build.
 
 ## Publish and verify

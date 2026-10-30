@@ -24,7 +24,8 @@ first substantial change in a session.
   in the body. Sections start at `##`.
 - Math: `$...$` inline, `$$...$$` display. KaTeX renders at build time; never convert
   plain text to LaTeX, and check built HTML for `katex-error` nodes or unrendered `$`
-  delimiters when a post contains math.
+  delimiters when a post contains math. A literal dollar sign in prose is written `\\$`;
+  two bare `$` on one line render as math.
 - `draft: true` hides a post from production; `make dev` includes drafts. Math is rendered at `make build` time only.
 
 ## Publishing
@@ -52,6 +53,12 @@ Pushing to `main` triggers the `Workers Builds: blog` production check (<1 min).
   viewport during navigation.
 - Preserve `scrollbar-gutter: stable` in `static/css/global.css` to avoid horizontal
   layout shifts between short and long pages.
+
+## Caching
+
+- `static/_headers` caches `/css/*`, `/js/*`, and `/fonts/*` for a year as immutable.
+  Link new CSS/JS with a `?h={{ get_hash(...) }}` query as `templates/base.html` does,
+  or deploys will not reach returning visitors.
 
 ## Safety
 

@@ -32,7 +32,7 @@ content/posts/          Markdown posts
 content/_index.md       Home section configuration
 content/posts/_index.md Post section configuration
 templates/              Tera layouts and partials
-static/css/             Site, theme, syntax, and KaTeX styles
+static/css/             Site, theme, and KaTeX styles
 static/js/              Theme and browser behavior
 static/fonts/           Served Fantasque Sans Mono files
 scripts/                Zola installation, build, math, and validation scripts
@@ -207,6 +207,8 @@ Public routes retain trailing slashes:
 /rss.xml
 /sitemap.xml
 ```
+
+`static/_headers` serves `/css/*`, `/js/*`, and `/fonts/*` with a one-year immutable cache. `templates/base.html` links each CSS and JS file with a `?h=` content hash from `get_hash`, so a deploy changes the URL. Any new stylesheet or script must be linked the same way, or returning visitors keep the old copy. HTML and the Zola-generated `giallo-*.css` files are not immutable.
 
 `static/_redirects` keeps `/posts` redirected to the homepage and redirects the previous Astro sitemap filenames to `/sitemap.xml`.
 
