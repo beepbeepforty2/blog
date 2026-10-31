@@ -7,11 +7,19 @@
 
   (function titleBlink() {
     const base = document.title;
+    const isBot =
+      navigator.webdriver ||
+      /bot|crawl|spider|slurp|google|bing|duckduck|yandex|baidu|lighthouse|headless/i.test(navigator.userAgent || '');
+    if (isBot) return;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduce) {
+    if (!reduce && !document.hidden) {
       let i = 0;
       const t = setInterval(function () {
-        if (document.hidden) return;
+        if (document.hidden) {
+          clearInterval(t);
+          document.title = base;
+          return;
+        }
         document.title = i % 2 === 0 ? base + ' ▊' : base;
         if (++i >= 6) {
           clearInterval(t);
@@ -19,7 +27,15 @@
         }
       }, 450);
     }
+    let interacted = false;
+    function markInteracted() {
+      interacted = true;
+    }
+    window.addEventListener('pointerdown', markInteracted, { once: true, passive: true });
+    window.addEventListener('keydown', markInteracted, { once: true, passive: true });
+    window.addEventListener('touchstart', markInteracted, { once: true, passive: true });
     document.addEventListener('visibilitychange', function () {
+      if (!interacted) return;
       document.title = document.hidden ? 'bye 👋' : base;
     });
   })();

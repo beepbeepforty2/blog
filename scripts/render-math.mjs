@@ -83,9 +83,12 @@ async function findHtmlFiles(directory) {
 let renderedExpressions = 0;
 for (const filename of await findHtmlFiles(outputDirectory)) {
   const original = await readFile(filename, 'utf8');
-  const rendered = renderHtml(original, filename);
+  let rendered = renderHtml(original, filename);
   const count = (rendered.match(/class="katex(?:-display)?"/g) || []).length - (original.match(/class="katex(?:-display)?"/g) || []).length;
   renderedExpressions += count;
+  if (!rendered.includes('class="katex')) {
+    rendered = rendered.replace(/\s*<link rel="stylesheet" href="\/css\/katex\.min\.css\?h=[^"]+">\n?/, '\n');
+  }
   if (rendered !== original) await writeFile(filename, rendered);
 }
 

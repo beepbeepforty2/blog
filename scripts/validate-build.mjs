@@ -26,12 +26,24 @@ const requiredFiles = [
   'giallo-light.css',
   'giallo-dark.css',
   '_headers',
+  'b8f4e2a9c1d6473890ab5e3c7f1d2046.txt',
   ...postSlugs.map((slug) => `posts/${slug}/index.html`),
 ];
 
 for (const relative of requiredFiles) await access(path.join(output, relative));
 
+function validateJsonLd(html, label) {
+  const match = html.match(/<script type="application\/ld\+json">\s*([\s\S]*?)\s*<\/script>/);
+  if (!match) throw new Error(`${label}: missing JSON-LD structured data`);
+  const parsed = JSON.parse(match[1]);
+  if (parsed['@context'] !== 'https://schema.org' || !parsed['@type']) {
+    throw new Error(`${label}: invalid JSON-LD schema`);
+  }
+  return parsed;
+}
+
 const index = await readFile(path.join(output, 'index.html'), 'utf8');
+validateJsonLd(index, 'index.html');
 const themeCount = (index.match(/data-theme-id=/g) || []).length;
 if (themeCount !== 20) throw new Error(`Expected 20 themes, found ${themeCount}`);
 if (!index.includes('Built with Zola.')) throw new Error('Footer does not identify the Zola build');
@@ -45,17 +57,25 @@ for (const slug of postSlugs) {
   const canonical = `https://undiscoveredmaterials.com/posts/${slug}/`;
   if (!html.includes(`<link rel="canonical" href="${canonical}">`)) throw new Error(`${slug}: canonical URL mismatch`);
   if (!html.includes('<meta property="og:type" content="article">')) throw new Error(`${slug}: missing article metadata`);
+  const schema = validateJsonLd(html, slug);
+  if (schema['@type'] !== 'BlogPosting' || schema.url !== canonical) throw new Error(`${slug}: invalid BlogPosting JSON-LD`);
   if (html.includes('katex-error')) throw new Error(`${slug}: contains a KaTeX error`);
   if (html.includes('/_astro/')) throw new Error(`${slug}: contains an Astro asset URL`);
   if (html.includes('/js/katex.min.js') || html.includes('/js/auto-render.min.js')) throw new Error(`${slug}: production math depends on browser JavaScript`);
-  // Only body prose is math-rendered; the head, headers, and code keep literal dollar signs.
-  const prose = html.slice(html.indexOf('<body')).replace(/<(header|pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/g, '');
+  // Only body prose is math-rendered; the head, headers, code, and HTML attributes keep literal dollar signs.
+  const prose = html
+    .slice(html.indexOf('<body'))
+    .replace(/<(header|pre|code|script|style|textarea)\b[\s\S]*?<\/\1>/g, '')
+    .replace(/<[^>]+>/g, '');
   if (/(?<!\\)\$[^$\n]+(?<!\\)\$/.test(prose)) throw new Error(`${slug}: contains an unrendered math delimiter`);
 }
 
 const mathPost = await readFile(path.join(output, 'posts/privacy-preserving-computer-vision/index.html'), 'utf8');
 if (!mathPost.includes('class="katex"')) throw new Error('Expected build-time KaTeX output was not found');
 if (!mathPost.includes('katex.min.css')) throw new Error('Math post is missing KaTeX CSS');
+
+const nonMathPost = await readFile(path.join(output, 'posts/hello-world/index.html'), 'utf8');
+if (nonMathPost.includes('katex.min.css')) throw new Error('Non-math post should not load KaTeX CSS');
 
 const rss = await readFile(path.join(output, 'rss.xml'), 'utf8');
 if ((rss.match(/<item>/g) || []).length !== postSlugs.length) throw new Error('RSS item count mismatch');

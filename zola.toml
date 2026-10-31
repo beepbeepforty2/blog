@@ -35,3 +35,26 @@ site_name = "Pratik’s notes"
 site_launch = "2026-08-11"
 theme_count = 20
 google_site_verification = "tMErjo8MKOZd0tFoQJ6v6xhdMs_Di6HARVBuwXcY_R8"
+indexnow_key = "b8f4e2a9c1d6473890ab5e3c7f1d2046"
+themes = [
+  ["gruvbox-dark", "Gruvbox Dark", "dark", "#282828", "#fe8019"],
+  ["gruvbox-light", "Gruvbox Light", "light", "#fbf1c7", "#af3a03"],
+  ["everforest-dark", "Everforest Dark", "dark", "#2d353b", "#a7c080"],
+  ["everforest-light", "Everforest Light", "light", "#fdf6e3", "#8da101"],
+  ["catppuccin-mocha", "Catppuccin Mocha", "dark", "#1e1e2e", "#89b4fa"],
+  ["catppuccin-latte", "Catppuccin Latte", "light", "#eff1f5", "#1e66f5"],
+  ["rose-pine", "Rosé Pine", "dark", "#191724", "#ebbcba"],
+  ["rose-pine-dawn", "Rosé Pine Dawn", "light", "#faf4ed", "#d7827e"],
+  ["tokyo-night", "Tokyo Night", "dark", "#1a1b26", "#7aa2f7"],
+  ["tokyo-night-day", "Tokyo Night Day", "light", "#e1e2e7", "#2e7de9"],
+  ["nord", "Nord", "dark", "#2e3440", "#88c0d0"],
+  ["kanagawa-wave", "Kanagawa Wave", "dark", "#1f1f28", "#7e9cd8"],
+  ["kanagawa-lotus", "Kanagawa Lotus", "light", "#f2ecde", "#4d699b"],
+  ["dracula", "Dracula", "dark", "#282a36", "#bd93f9"],
+  ["one-dark", "One Dark", "dark", "#282c34", "#61afef"],
+  ["monokai-pro", "Monokai Pro", "dark", "#2d2a2e", "#ffd866"],
+  ["solarized-dark", "Solarized Dark", "dark", "#002b36", "#268bd2"],
+  ["solarized-light", "Solarized Light", "light", "#fdf6e3", "#268bd2"],
+  ["github-dark", "GitHub Dark", "dark", "#0d1117", "#58a6ff"],
+  ["github-light", "GitHub Light", "light", "#ffffff", "#0969da"],
+]

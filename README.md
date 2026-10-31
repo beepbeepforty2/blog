@@ -22,6 +22,9 @@ The first `make check`, `make build`, or `make dev` unpacks the pinned Zola bina
 | `make check` | Validate Zola content, internal links, post metadata, slugs, and heading structure. |
 | `make build` | Check the site, build into `dist/`, render math with KaTeX, and validate generated output. |
 | `make preview` | Serve the completed `dist/` build at `http://localhost:4321/`. |
+| `make seo-status` | Audit live URLs as Googlebot and inspect indexing status via Google Search Console API. |
+| `make seo-submit` | Submit `sitemap.xml` to Google Search Console API and push URLs to IndexNow. |
+| `make seo-setup` | Print one-time setup steps for Google Search Console CLI authentication. |
 
 Equivalent scripts: `scripts/zola.sh serve --drafts`, `scripts/check.sh`, `scripts/build.sh`, and `python3 -m http.server 4321 --directory dist`.
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- set posts = get_section(path="posts/_index.md") -%}
+{%- set latest_post_date = config.extra.site_launch -%}
+{%- if posts.pages | length > 0 -%}
+  {%- set newest = posts.pages | first -%}
+  {%- set newest_date = newest.date -%}
+  {%- if newest.updated -%}{%- set newest_date = newest.updated -%}{%- endif -%}
+  {%- set latest_post_date = newest_date | date(format="%Y-%m-%d", timezone="UTC") -%}
+{%- endif %}
+    <url>
+        <loc>{{ config.base_url | escape_xml | safe }}/</loc>
+        <lastmod>{{ latest_post_date }}</lastmod>
+    </url>
+{%- for entry in entries %}
+  {%- if entry.permalink != config.base_url ~ "/" %}
+    <url>
+        <loc>{{ entry.permalink | escape_xml | safe }}</loc>
+        {%- if entry.updated %}
+        <lastmod>{{ entry.updated | date(format="%Y-%m-%d", timezone="UTC") }}</lastmod>
+        {%- endif %}
+    </url>
+  {%- endif %}
+{%- endfor %}
+</urlset>

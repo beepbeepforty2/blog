@@ -1,25 +1,4 @@
-{% if themes is not defined %}{% set themes = [
-  ["gruvbox-dark", "Gruvbox Dark", "dark", "#282828", "#fe8019"],
-  ["gruvbox-light", "Gruvbox Light", "light", "#fbf1c7", "#af3a03"],
-  ["everforest-dark", "Everforest Dark", "dark", "#2d353b", "#a7c080"],
-  ["everforest-light", "Everforest Light", "light", "#fdf6e3", "#8da101"],
-  ["catppuccin-mocha", "Catppuccin Mocha", "dark", "#1e1e2e", "#89b4fa"],
-  ["catppuccin-latte", "Catppuccin Latte", "light", "#eff1f5", "#1e66f5"],
-  ["rose-pine", "Rosé Pine", "dark", "#191724", "#ebbcba"],
-  ["rose-pine-dawn", "Rosé Pine Dawn", "light", "#faf4ed", "#d7827e"],
-  ["tokyo-night", "Tokyo Night", "dark", "#1a1b26", "#7aa2f7"],
-  ["tokyo-night-day", "Tokyo Night Day", "light", "#e1e2e7", "#2e7de9"],
-  ["nord", "Nord", "dark", "#2e3440", "#88c0d0"],
-  ["kanagawa-wave", "Kanagawa Wave", "dark", "#1f1f28", "#7e9cd8"],
-  ["kanagawa-lotus", "Kanagawa Lotus", "light", "#f2ecde", "#4d699b"],
-  ["dracula", "Dracula", "dark", "#282a36", "#bd93f9"],
-  ["one-dark", "One Dark", "dark", "#282c34", "#61afef"],
-  ["monokai-pro", "Monokai Pro", "dark", "#2d2a2e", "#ffd866"],
-  ["solarized-dark", "Solarized Dark", "dark", "#002b36", "#268bd2"],
-  ["solarized-light", "Solarized Light", "light", "#fdf6e3", "#268bd2"],
-  ["github-dark", "GitHub Dark", "dark", "#0d1117", "#58a6ff"],
-  ["github-light", "GitHub Light", "light", "#ffffff", "#0969da"]
-] %}{% endif %}
+{% if themes is not defined %}{% set themes = config.extra.themes %}{% endif %}
 <div class="theme-strip-row">
   <button type="button" class="strip-arrow strip-arrow-left" data-scroll="left" aria-label="Scroll themes left" hidden><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
   <div class="theme-strip" role="group" aria-label="Theme">

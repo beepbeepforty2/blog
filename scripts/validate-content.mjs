@@ -17,7 +17,10 @@ for (const name of (await readdir(postsDirectory)).filter((entry) => entry.endsW
     const hasField = lines.some((line) => new RegExp(`^${field}:\\s*\\S`).test(line.trim()));
     if (!hasField) failures.push(`${name}: missing ${field}`);
   }
-  if (/^#\s+/m.test(source.slice(frontmatter[0].length))) failures.push(`${name}: body must not contain an H1`);
+  const bodyWithoutCodeBlocks = source
+    .slice(frontmatter[0].length)
+    .replace(/^(`{3,}|~{3,})[\s\S]*?^\1\s*$/gm, '');
+  if (/^#\s+/m.test(bodyWithoutCodeBlocks)) failures.push(`${name}: body must not contain an H1`);
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*\.md$/.test(name)) failures.push(`${name}: filename is not a lowercase hyphenated slug`);
 }
 

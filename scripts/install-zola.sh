@@ -13,25 +13,27 @@ fi
 case "$(uname -s)-$(uname -m)" in
   Darwin-arm64)
     archive="zola-v${version}-aarch64-apple-darwin.tar.gz"
-    checksum="303b8e1f3251a6250e47f811eda143316f653c22201faa66777d48ac499c0ee3"
     ;;
   Darwin-x86_64)
     archive="zola-v${version}-x86_64-apple-darwin.tar.gz"
-    checksum="e79edcba2e8d03d22065c9cb8fa2e3abf07b823ef17f00abdc060188dceabba7"
     ;;
   Linux-x86_64)
     archive="zola-v${version}-x86_64-unknown-linux-gnu.tar.gz"
-    checksum="54d1a347781b2f32330914fcc02def81c7e3ddb6111b36d1cc89c06557aed1de"
     ;;
   Linux-aarch64|Linux-arm64)
     archive="zola-v${version}-aarch64-unknown-linux-gnu.tar.gz"
-    checksum="21bb37a4f3bbac663cf8f04df9b51ac6bc154acfe2cf2c3e9ea162b4951487b6"
     ;;
   *)
     echo "Unsupported platform: $(uname -s)-$(uname -m)" >&2
     exit 1
     ;;
 esac
+
+checksum="$(awk -v target="zola/$archive" '$2 == target {print $1}' "$repo_root/vendor/SHA256SUMS")"
+if [[ -z "$checksum" ]]; then
+  echo "Missing checksum for zola/$archive in vendor/SHA256SUMS" >&2
+  exit 1
+fi
 
 archive_path="$repo_root/vendor/zola/$archive"
 if [[ ! -f "$archive_path" ]]; then

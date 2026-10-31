@@ -11,6 +11,14 @@
   {% if page.updated %}<meta property="article:modified_time" content="{{ page.updated | date(format='%Y-%m-%dT%H:%M:%S.000Z', timezone='UTC') }}">{% endif %}
 {% endblock article_meta %}
 
+{% block structured_data %}
+    {% set post_desc = config.description %}{% if page.description %}{% set post_desc = page.description %}{% endif %}
+    {% set mod_date = page.date %}{% if page.updated %}{% set mod_date = page.updated %}{% endif %}
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"BlogPosting","headline":{{ page.title | json_encode | safe }},"description":{{ post_desc | json_encode | safe }},"datePublished":"{{ page.date | date(format='%Y-%m-%dT%H:%M:%S.000Z', timezone='UTC') }}","dateModified":"{{ mod_date | date(format='%Y-%m-%dT%H:%M:%S.000Z', timezone='UTC') }}","mainEntityOfPage":{"@type":"WebPage","@id":"{{ current_url }}"},"url":"{{ current_url }}","author":{"@type":"Person","name":"Pratik Chatse","url":"{{ config.base_url }}/about/","sameAs":["https://github.com/beepbeepforty2"]},"publisher":{"@type":"Person","name":"Pratik Chatse","url":"{{ config.base_url }}/"}}
+    </script>
+{% endblock structured_data %}
+
 {% block content %}
   <article class="post">
     <header>
@@ -21,5 +29,21 @@
       </p>
     </header>
     <div class="prose">{{ page.content | safe }}</div>
+    {% if page.higher or page.lower %}
+      <nav class="post-nav" aria-label="Adjacent posts">
+        {% if page.higher %}
+          <a class="post-nav-link post-nav-prev" href="{{ page.higher.permalink }}">
+            <span class="post-nav-label">← Older</span>
+            <span class="post-nav-title">{{ page.higher.title }}</span>
+          </a>
+        {% endif %}
+        {% if page.lower %}
+          <a class="post-nav-link post-nav-next" href="{{ page.lower.permalink }}">
+            <span class="post-nav-label">Newer →</span>
+            <span class="post-nav-title">{{ page.lower.title }}</span>
+          </a>
+        {% endif %}
+      </nav>
+    {% endif %}
   </article>
 {% endblock content %}
